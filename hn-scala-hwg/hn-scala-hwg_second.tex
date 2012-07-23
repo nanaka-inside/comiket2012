@@ -1,0 +1,348 @@
+\part{基礎編:変数とクラスを学ぶ}
+\begin{itembox}[l]{ここで学ぶこと}
+\begin{itemize}
+\item 変数(valとvar の違い、型と型推論) 
+\item クラス(フィールドとメソッド、コンストラクタ) 
+\item オブジェクト(コンパニオンオブジェクト)
+\item プログラミングスタイルの使い分け
+\end{itemize}
+\end{itembox}
+いよいよ、Scalaの基本文法を学んでいきましょう。基礎編では主に「変数」と「クラス」について学びます。
+
+\section{変数:再代入の有無がポイント}
+学習のためにはインタプリタで一文ずつ確認した方が理解しやすいでしょう。そこで、ここではREPLを利用します。\footnote{REPLではクラスに紐付かない変数やメソッドを定義できます。}
+\subsection{「val\index{val}」で再代入できない変数を定義する}
+典型的な変数として、文字列型の変数を次のように定義してみます。
+
+\begin{lstlisting}[language=scala, frame=none]
+scala> val name = "Scala"
+name: java.lang.String = Scala
+\end{lstlisting}
+
+変数を宣言するには「val」あるいは「var」を最初に配置し、 その後に変数名を記述します。この例ではvalで宣言し、初期値は代入演算子の後に続けて指定しています。また、変数宣言の文を記述しEnterキーを押すと、次の行に「name: java.lang.String = Scala」と表示されます。これは nameという変数の中にString型で"Scala"という値を保持していることを表します。ちなみにScalaの文字列型には Javaの文字列型(java.lang.String)が使われます。 valの変数は、Javaでいうfinal変数と同じ扱いです。つまり、初期値が必要で、再代入は禁止されます。試しに代入すると次のようにエラーが発生します。そういう意味では“変数”ではなく、“定数”という表現が適切かもしれません。
+
+\begin{lstlisting}[language=scala, frame=none]
+scala> name = "Java"
+<console>:6: error: reassignment to val
+    name = "Java"
+\end{lstlisting}
+
+\subsection{再代入できる変数は「var\index{var}」で定義する}
+続いて、もう一つの宣言方法であるvarの場合です。こちらは再代入が可能な“普通の”変数です。 
+
+\begin{lstlisting}[language=scala, frame=none]
+scala> var name = "Java"
+name: java.lang.String = Java
+scala> name = "Scala"
+name: java.lang.String = Scala
+\end{lstlisting}
+
+このようにScalaでは、一度作成したら再度の代入はできない「不変なval」と、再代入可能な「可変なvar」の2種類の変数宣言が可能です。関数型のプログラミングスタイルでは変数を再代入できないvalを原則的に利用します。なぜかについては後述します。 
+
+\subsection{Scalaの代表的な型と変数の型推論}
+Scalaの代表的な型を\tbRef{tb:scala_types}に示します。Javaのプリミティブ型に相当する型はなく、すべてがクラスです\footnote{Javaではすべてのクラスがjava.lang.Objectを継承しているようにScalaではAnyクラスから派生しています。Anyクラスの直下にはAnyValとAnyRefがあります。AnyValは、Javaのプリミティブ型に相当し、IntやLongなど値を表すクラスの親クラスです。AnyRefは、Javaの参照型に相当し、それ以外のクラスの親クラスとなります。} 。Javaでは次のように変数の型を指定する必要があります。
+
+\begin{lstlisting}[language=java, frame=none]
+String name = "Java";
+\end{lstlisting}
+
+Scalaでは、変数の型を省略して記述できます。これは、代入される値が文字列型であるため、nameがStringであるとコンパイラが型を自動的に判定します。このような機能を「型推論」といいます。
+
+\begin{lstlisting}[language=scala, frame=none]
+val name = "Java"
+\end{lstlisting}
+
+あえて型を指定して宣言した例を次に示します。変数名の後ろに、コロン(:)に続けて型名を記述することで、明示的に型を指定できます。この指定方法を「型アノテーション\index{かた@型アノテーション}」と呼びます。
+
+\begin{lstlisting}[language=scala, frame=none]
+scala> val name:String = "Java"
+name: java.lang.String = Java
+\end{lstlisting}
+
+数値型の場合も同様に型推論が適用できます。Number型などの抽象型を指定したい場合は型アノテーションを利用するとよいでしょう(\lstRef{src:type_annotation})。逆に型推論で型が決定している変数に異なる型の値を代入したらどうなるでしょうか。試しに文字列型のnameに数値型であるInt型の値を代入してみましょう(\lstRef{src:type_missmatch})。結果は期待通り、型の不一致(type mismatch)です。ScalaはJavaと同様に強い型付けを持つ言語だということがわかります。ScalaはJavaと同様に強い静的型付けを持ちながらも、スクリプト言語のように簡潔なコードを書くことができます。これは大きな魅力ではないでしょうか。
+
+\begin{table}[hb]
+  \caption{Scalaの代表的な型}
+  \begin{center}
+    \begin{tabular}{|l|c|l|c|} \hline
+    \multicolumn{1}{|c|}{型名} & \multicolumn{1}{|c|}{値の範囲} & \multicolumn{1}{|c|}{記述例} & \multicolumn{1}{|c|}{Javaでの例} \\ \hline
+    Unit & なし & () & void \\ \hline
+    Boolean & 真偽値 & true, false & boolean \\ \hline
+    Char & ユニコード文字 & 'a' & char \\ \hline
+    Byte & 1バイト整数 & 10.toByte & byte \\ \hline
+    Short & 16ビット整数 & 10.toShort & short \\ \hline
+    Int & 32ビット整数 & 123 & int \\ \hline
+    Long & 64ビット整数 & 123L & long \\ \hline
+    Float & 32ビット浮動小数 & 123.0F & float \\ \hline
+    Double & 64ビット浮動小数 & 123.0D & double \\ \hline
+    String & 文字列 & "abc" & String \\ \hline 
+\end{tabular}
+  \end{center}
+  \label{tb:scala_types}
+\end{table}
+
+\begin{lstlisting}[language=scala, label=src:type_annotation, caption=型アノテーションの例]
+scala> val num1 = 1
+num1: Int = 1
+scala> val num2 = 1.5
+num2: Double = 1.5
+scala> val num:Number = 1
+num: java.lang.Number = 1
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:type_missmatch, caption=文字列型の変数にInt型の値を代入するとエラーになる]
+scala> var name = "Scala"
+name: java.lang.String = Scala
+scala> name = 1
+<console>:6: error: type mismatch;
+found : Int(1)
+required: java.lang.String
+     name = 1
+            ^
+\end{lstlisting}
+\section{クラスが簡潔に書ける}
+Javaと同様、Scalaの場合もプログラミングはクラスからです。その使い方から見ていきましょう。IntelliJ IDEAでコードを動かしながら読み進めてください。
+\subsection{クラスとフィールドを宣言する}
+早速クラスを使ってみましょう。今回はお金を表すMoneyクラスを例に取り、クラスの使い方を学びます。 まず、\lstRef{src:money}のようにMoneyクラスを宣言します。前述したように、クラス宣言のデフォルト(既定)のアクセス修飾子はpublicです。Javaだと同一パッケージ内からしかアクセスできないパッケージプライベートですが、Scalaでは何も記述しなければpublicです。
+
+\begin{lstlisting}[language=scala, label=src:money, caption=Moneyクラス]
+package money
+import java.util.Currency
+ 
+class Money(val amount : BigDecimal, val currency : Currency)
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:verbose_money, caption=Moneyクラス(省略しないで書いたもの)]
+class Money(amnt : BigDecimal, creny : Currency) { // --> (1)
+  val amount = amnt
+  val currency = creny
+} // <-- (1)
+\end{lstlisting}
+
+Moneyクラスには、二つの属性があります\footnote{Scalaではクラス宣言だけでなく、フィールド宣言のデフォルトのアクセス修飾子もpublicです。} 。金額の量を表すBigDecimal型のamountと、円やドルなどそのお金の単位(通貨単位)を表すCurrency型のcurrencyです\footnote{java.util.Currencyクラスは通貨単位を表すクラスです。例えば、val currency = Currency.getInstance("JPY") のようにすると円の通貨単位を取得できます。}。この説明だけでは、理解しにくいと思うので、段階を追って解説しましょう。\lstRef{src:money}のコードを省略しないで記述したのが\lstRef{src:verbose_money}です。Scalaでは、クラス名の後ろにコンストラクタの引数の仕様を記述し、(1)のブロックがコンストラクタの処理ブロックとなります。このコンストラクタを基本コンストラクタ\index{きほんこんすとらくた@基本コンストラクタ} (primary constructor)と呼びます。また、このブロックはフィールド宣言のブロックでもあります。この例では、コンストラクタの引数からvalフィールドに代入しています\footnote{valのフィールドはJavaのpublic finalフィールドに相当します。} 。つまり、クラス宣言部とコンストラクタ宣言部をまとめて記述することで、簡潔で明瞭なコードを書けるわけです。さらに、コンストラクタの引数とフィールドは一対一対応しているので、このような記述も冗長です。この冗長さを取り除いて書いたのが、\lstRef{src:money}です。とても簡潔に、たった1行でクラスを定義できるわけです。このクラスを利用して、100円を表すコードを書くと\lstRef{src:money_100yen}のようになります。
+
+\begin{lstlisting}[language=scala, label=src:money_100yen, caption=100円を表すコード]
+val currency = Currency.getInstance("JPY")	// 円の通貨単位
+val money = new Money(100, currency)		// 100円
+println(money.amount)				// 100
+println(money.currency)				// JPY 
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:money_test, caption=100円と50円を加算した結果が150円になっているかを検証するテストコード。Moneyクラスのplusメソッドはまだ存在しないので実行するとエラーになる]
+val currency = Currency.getInstance("JPY")	// 円の通貨単位
+val a = new Money(100, currency)		// 100円
+println(a.amount)				// 100
+
+val b = new Money(50, currency)			// 50円
+println(b.amount)				// 50
+
+val result = a.plus(b)				// 100円 + 50円
+println(result.amount)				// 150
+
+val answer = new Money(150, currency)
+assert(result.amount == answer.amount 
+  && result.currency == answer.currency) // 150円かどうか検証 
+\end{lstlisting}
+
+\subsection{メソッドを実装する}
+Moneyクラスをさらに利用してみましょう。100円と50円を加算した場合の結果が150円になっているかを検証するテストコードの例を\lstRef{src:money_test}に示します。Moneyクラスのplusメソッドはまだ存在しないのでエラーになります。Moneyクラスにplusメソッドを実装する前に、メソッドの基本知識を知っておきましょう。少し複雑な処理をある程度のまとまりでメソッド化することがよくあります。例えば、次の例は二つの数値を加算した結果を返すaddという単純なメソッドです。 
+\begin{lstlisting}[language=scala, frame=none]
+def add(a:Int, b:Int):Int = {
+  return a + b
+}
+val result = add(1, 2) // 3
+\end{lstlisting}
+addに1と2の値を渡して加算し、3という結果を得ています。 メソッドのシグニチャの意味は、Hello,Worldの節のmainメソッドで説明した通りですが、addは値を返すところが違います。加算結果の値をreturn\index{return} で返しています。ただし、関数の最後に評価した式の値が戻り値になるため、returnを省略できます\footnote{処理途中でメソッドの呼び出し元に戻る場合はreturnを記述する必要があります。} 。また、メソッド本体の処理が一つの式\footnote{式とは一般に値や変数、演算子、関数の組み合わせのことを指します。式は評価された値を持ちます。}で終わる場合は、メソッド本体のブロックを省略できます。そのため、次のような簡潔な記述が可能です。
+\begin{lstlisting}[language=scala, frame=none]
+def add(a:Int, b:Int):Int = a + b
+\end{lstlisting}
+さらに変数の型推論と同様、メソッドの戻り値についても型推論により次のように省略できます。
+\begin{lstlisting}[language=scala, frame=none]
+def add(a:Int, b:Int) = a + b
+\end{lstlisting}
+ただし、引数の型は省略できませんので注意してください。 
+
+\subsection{Moneyクラスにplusメソッドを追加する}
+いよいよ、Moneyクラスにplusメソッドを実装してみましょう(\lstRef{src:money_plus})。otherのcurrencyと、現在のcurrency が同じ値であることをrequireメソッドで検証しています。この条件に反するとrequireメソッドはIllegalArgumentExceptionをスローします。同じ通貨単位であれば、現在のamountとotherのamountを加算した値を持つ新しいMoneyを生成して戻り値として返します。このplusメソッドを使えば、\lstRef{src:money_test}で示したテストコードが実行できるはずです。 
+
+\begin{lstlisting}[language=scala, label=src:money_plus, caption=plusメソッドを実装したMoneyクラス]
+class Money(val amount: BigDecimal, val currency: Currency) {
+  def plus(other: Money) = {
+    require(other.currency == currency)
+    new Money(amount + other.amount, currency)
+  }
+   
+  override def equals(obj: Any) = obj match {
+    case that: Money =>
+      amount == that.amount && currency == that.currency
+    case _ => false
+  }
+   
+  // equalsを再定義する場合はhashCodeも再定義する
+  override def hashCode = amount.hashCode + currency.hashCode
+} 
+\end{lstlisting}
+
+\subsection{補助コンストラクタを実装する}
+Moneyクラスの例では、初期化時にいちいちCurrencyを指定するのは面倒です。コンストラクタのCurrencyを省略したい場合は、Currency.getInstance(Locale.getDefault) を利用するように実装するとよいでしょう(\lstRef{src:locale_default})。 
+
+\begin{lstlisting}[language=scala, label=src:locale_default, caption=ほとんどの場合で次のようにして円の通貨単位を扱える]
+val currency = Currency.getInstance(Locale.getDefault)
+val a = new Money(100, currency) // 100円 
+\end{lstlisting}
+
+Javaでは、コンストラクタをオーバーロードしてCurrencyを省略するように実装できます。Scalaの場合でも\lstRef{src:aux_const}のようにして引数の異なるコンストラクタを定義できます。これを補助コンストラクタ\index{ほじょこんすとらくた@補助コンストラクタ} (auxiliary constructor)を呼びます\footnote{補助コンストラクタは、最終的に基本コンストラクタを呼び出す必要があります。また、基本コンストラクタに、以下のようにデフォルト引数を指定する方法もあります。デフォルト引数とは引数が指定されなかった場合に暗黙的に指定する引数のことです。class Money(var amount: BigDecimal,var currency: Currency = Currency.getInstance(Locale.getDefault) ) ...} 。そのテストコードを\lstRef{src:aux_const_test}に示します。
+
+\begin{lstlisting}[language=scala, label=src:aux_const, caption=補助コンストラクタの例]
+package money
+import java.util.Currency
+import java.util.Locale
+ 
+class Money(val amount: BigDecimal, val currency: Currency) {
+  // ↓補助コンストラクタ
+  def this(amount : BigDecimal) = this(amount, Currency.getInstance(Locale.getDefault))
+   
+  // 以下、省略
+} 
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:aux_const_test, caption=\lstRef{src:aux_const}用のテストコード]
+val a = new Money(100) // 100円
+println(a.amount)
+val b = new Money(50) // 50円
+println(b.amount)
+val result = a.plus(b) // 100円 + 50円
+println(result.amount)
+assert(result == new Money(150)) // 150円かどうか検証
+\end{lstlisting}
+
+\subsection{オブジェクトでインスタンスを一つに限定}
+Javaでは、よく使う値をstatic finalなクラスフィールドで定義します。Scalaで書いたMoneyクラスでも、Currencyを円にするなど定数のようにできないものでしょうか。 
+
+通常のクラスだけでは以下のようにインスタンス化しないで定数フィールドを参照することはできません。
+\begin{lstlisting}[language=scala, frame=none]
+val usdCurrency = Money.USD
+\end{lstlisting}
+
+Scalaではstatic finalの代わりにオブジェクトが使えます。Hello,Worldの節で紹介したHelloWorldがオブジェクトでした。このオブジェクトは一見すると、objectキーワードで宣言するクラスのようなものですが、複数のインスタンスが作成できるクラスとは違い、一つのインスタンスしか生成できません。デザインパターンのシングルトン(クラスのインスタンスが一つしか生成されない)を言語としてサ ポートしているわけです。使用する場合の注意点は、オブジェクトのコンストラクタには引数を持つことができないことです。例えば、\lstRef{src:dao_object}は従業員(Employee)を読み書きできる、データベース管理システムのテーブルを表すオブジェクト(EmployeeTable)の例です。 
+
+\begin{lstlisting}[language=scala, label=src:dao_object, caption=データベース管理システムのテーブルを表すオブジェクトの例]
+// 従業員クラス
+class Employee(val name:String)
+// 従業員テーブルオブジェクト
+object EmployeeTable {
+  def insert(table:Employee):Unit = ...
+  def selectAll:List[Employee] = ... 
+}
+// new EmployeeTableではなく、EmployeeTableとすると
+// 常に同一のインスタンスが返される
+val employeeTable = EmployeeTable
+employeeTable.insert(new Employee("Junichi Kato"))
+val employees = employeeTable.selectAll
+\end{lstlisting}
+
+\subsection{コンパニオンオブジェクトで非公開メンバーに相互アクセス}
+Moneyクラスの例に戻りましょう。Moneyクラス用の定数フィールドを定義するにはオブジェクトを使うわけですが、その際、コンパニオンオブジェクトという形式で定義します。コンパニオンオブジェクトとは、同じファイルや同じパッケージ内でクラスと同じ名前で定義されたオブジェクトのことを指します。また、対になっているクラスをコンパニオンクラスと呼びます\footnote{Javaでは名前空間の衝突が発生してしまいますが、Scalaの場合は発生しません。} 。コンパニオンクラスとコンパニオンオブジェクトを使うメリットは、お互いの非公開メンバー(フィールドとメソッドの両方)にアクセスできることです。\lstRef{src:companion_object}の例では、コンパニオンとなるクラスとオブジェクトを同一ファイルに定義しています。
+
+コンパニオンオブジェクトのフィールドを使えばstaticフィールド相当のことができます(\lstRef{src:object_field})。お互いの非公開メンバーへのアクセスは、リスト12の例で見てみましょう。MoneyオブジェクトのDEFAULT\_CURRENCYには、Moneyクラスからアクセス可能です。また、Moneyクラスのamountには、Moneyオブジェクトからアクセス可能です。
+
+\begin{lstlisting}[language=scala, label=src:companion_object, caption=コンパニオンオブジェクトの例。コンパニオンとなるクラスとオブジェクトを同一ファイルに定義する]
+package money
+import java.util.Currency
+import java.util.Locale
+ 
+// コンパニオンクラス
+class Money(var amount : BigDecimal, var currency : Currency) {
+  def this(amount : BigDecimal) = ...
+  def plus(other: Money) = ... 
+}
+
+// コンパニオンオブジェクト(必ず同一ファイルに定義する)
+object Money {
+  val USD = Currency.getInstance("USD")
+  val JPY = Currency.getInstance("JPY")
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:object_field, caption=第二引数にコンパニオンオブジェクトのフィールドを指定]
+val money = new Money(100, Money.JPY)
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:privilege_access, caption=コンパニオンオブジェクトを使えばお互いの非公開メンバーにアクセスできる。amountとDEFAULT\_CURRENCYは共にprivateであることに注目]
+// コンパニオンクラス
+class Money(private val amount:BigDecimal, val currency:Currency) {
+  def this(amount:BigDecimal) = this(amount, Money.DEFAULT_CURRENCY)
+  // 以下、省略
+}
+// コンパニオンオブジェクト
+object Money {
+  val USD = Currency.getInstance("USD")
+  val JPY = Currency.getInstance("JPY") // デフォルトのCurrency
+  private val DEFAULT_CURRENCY = JPY // すべてのMoneyの合計を返す
+   
+  def sum(monies:List[Money]) = {
+    var result:BigDecimal = 0
+    for(money <- monies){
+      result += money.amount
+    }
+    new Money(result)
+  }
+   
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=scala, label=src:factory_method, caption=コンパニオンオブジェクト内部にファクトリメソッド(applyメソッド)を定義する]
+package money
+import java.util.Currency
+import java.util.Locale
+ 
+class Money(var amount : BigDecimal, var currency : Currency) {
+  def this(amount : BigDecimal) = ...
+  def plus(other: Money) = ...
+}
+// 必ず同一ファイルに定義する
+object Money {
+  def apply(amount : BigDecimal, currency : Currency) =
+    new Money(amount, currency)
+  // 補助コンストラクタを廃止し、コンパニオンオブジェクトで複雑な生成を担うことも可能
+  def apply(amount : BigDecimal) =
+    new Money(amount, Currency.getInstance(Locale.getDefault))
+}
+\end{lstlisting}
+
+\subsection{コンパニオンオブジェクトで ファクトリを実装}
+コンパニオンオブジェクトにはファクトリ(インスタンスの生成)としての役割もあります。リスト13のようにapplyメソッドを定義することで、new演算子を利用せずにインスタンスを作ることができるようになります。 applyメソッドは明示的に呼び出すのではなく、「コンパニオンオブジェクト名(引数)」のように記述することでapplyメソッドを呼び出します。例えば、\lstRef{src:apply_method}では、Money(100, Money.JPY)はMoney.apply(100, Money.JPY) と、Money(150)はMoney.apply(150)と同じ意味になります。これは糖衣構文(シンタックスシュガー)といって、コードの読み書きのしやすさのために導入される構文です。
+
+\begin{lstlisting}[language=scala, label=src:apply_method, caption=applyメソッドの呼び出し例。糖衣構文により簡単に呼び出せる]
+// Money(100, Money.JPY)は、Money.apply(100, Money.JPY)が呼び出されて
+// new Money(100, Money.JPY)が実行される
+val a = Money(100, Money.JPY)
+// ...
+// Money(150)は、Money.apply(150)が呼び出され、new Money(150, Money.JPY)が実行される
+assert(result == Money(150))
+\end{lstlisting}
+
+\begin{itembox}[l]{Scalaではプログラミングスタイルを関数型と命令型で使い分けできる}
+本文中のplusメソッド(\lstRef{src:money_plus})ではthis(既存のインスタンス)のamountを変更せずに、新しいMoneyインスタンスを生成しています。実はこのメソッドは関数型を意識したプログラミングスタイルを採用しています。素直にMoneyのフィールドをvalではなくvarにして、thisのamountに加算してもよいはずです。
+\begin{lstlisting}[language=scala, frame=none]
+class Money(var amount: BigDecimal, val currency: Currency) { 
+  def plus(other: Money): Unit = {
+    require(other.currency == currency)
+    amount += other.amount 
+  }
+}
+\end{lstlisting}
+Javaプログラマならこちらのメソッドの方がなじみ深いでしょう。このメソッドは従来からの命令型のプログラミングスタイルに沿っています。Scalaは関数型の特徴を持つ言語ですが、このような命令型のプログラミングスタイルも許容しています。命令型のplusメソッドでは、thisのamountの値を更新するのでthisの状態を変更することを意味します。2度目にplusメソッドが呼ばれた場合も、1度目のplusメソッドによる加算結果を保持するamountが利用されます。つまり、状態の変更はその後の処理に影響を与えます。例えば、状態の変更を起こすplusメソッドでテストコードを書いた場合はどのようになるのでしょうか。以下のテストコードを見てください。
+\begin{lstlisting}[language=scala, frame=none]
+val currency = Currency.getInstance("JPY")
+val money = new Money(100, currency)
+ // money.plus(new Money(20, currency)) (A)
+money.plus(new Money(10, currency)) 
+if ( money == new Money(110, currency) ) {
+  println(money.amount) // 110を表示 
+}
+\end{lstlisting}
+この例では、moneyを100円で初期化し、plusメソッドで10 円を追加し、次のif文で110円のときに金額を表示しています。 
+期待通りに処理できますが、プログラムの仕様変更で(A)の部分に20円を追加した場合はどうでしょうか。130円となるので、当然if文はtrueになりません。ここは条件式を変更する必要があるでしょう。この例が示しているように、状態の変化を引き起こす処理は複雑で理解しにくいことがわかります。複雑であればプログラムに対して間違った理解をしてしまい、思わぬ不具合を作り込んでしまう可能性があります。このように、ある処理が状態の変更を引き起こし、その後の処理に影響を与えることを「副作用」と呼びます。代表的な副作用のある処理とは、変数の値の変更と、標準出力/標準入力やファイルなどの入出力です。関数型言語では、「メソッド(関数)内の処理は副作用を持つべきでない」という考え方に基づくプログラミングスタイルを採用しています。また、最初に説明した副作用を起こさないMoneyクラスのplusメソッドは、どのような処理を実行しても副作用を起こしません。moneyに対してどのような操作を行っても、処理結果は新しいインスタンスが生成されるだけです。つまり、plusメソッドの処理結果は引数のotherだけに依存し、その呼出しによって他の動作に影響を与えないという特徴があります。このような特徴を「参照透明性」といいます。また、amountはvalで宣言されているので、そもそもamountに再代入ができません。再代入するならば、varで宣言しますが、関数型ではvalを使うのが基本です。valは、一度初期化したら二度と値を変更することができません。このような特徴を「単一代入」と呼びます。クラスのフィールドにvalを利用することで自然と副作用を回避できるため、バグを作り込みにくいプログラミングスタイルとなっています。このように関数型は副作用に対して大きなメリットがありますが、普段命令型に慣れていると新たな言語を学習するコストは高くなりがちです。しかし、Scalaではプログラマに関数型と命令型のそれぞれのプログラミングスタイルを適材適所で選択できる自由を与えています。特に、これからScalaを学習するプログラマには、慣れている命令型のプログラミングスタイルから始めることができるのは大きなメリットでしょう。
+\end{itembox}
+
