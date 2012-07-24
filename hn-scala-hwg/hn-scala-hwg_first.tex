@@ -179,9 +179,52 @@ Hello, World!
 \end{lstlisting}
 最後に、HelloWorld.scalaに基づいて、Scalaの文法を紹介します。詳しくは次ページ以降で説明しますので、ここでは気楽に\figRef{fig:java_vs_scala_helloworld}を見てください。このHelloWorld.scalaをJavaで記述したのが、見慣れたHelloWorld.javaです。
 
+%% \begin{figure}[h]
+%%   \centering
+%%   \caption{Javaと比較した場合のScalaの文法の特徴}
+%%   \label{fig:java_vs_scala_helloworld}
+%%   \includegraphics[scale=0.8]{img/hello_world_code.eps}
+%% \end{figure}
+
 \begin{figure}[h]
-  \centering
   \caption{Javaと比較した場合のScalaの文法の特徴}
   \label{fig:java_vs_scala_helloworld}
-  \includegraphics[scale=0.8]{img/hello_world_code.eps}
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{lstlisting}[language=scala, frame=none]
+object HelloWorld {
+
+  def main(args: Array[String]):Unit = {
+    println("Hello, World!")
+  }
+
+}
+\end{lstlisting}%
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.5\textwidth}
+\begin{lstlisting}[language=java, frame=none]
+class HelloWorld {
+
+  public static void main(String[] args) {
+    System.out.println("Hello, World!");
+  }
+
+}
+\end{lstlisting}%
+\end{minipage}%
+
+\begin{screen}
+\begin{enumerate}
+\item objectはシングルトン\footnote{インスタンスを1つだけ作ることを保証するデザインパターン。}を定義するための予約語。
+\item Scalaでは、アクセス修飾子を省略した場合はpublicとなる。
+\item Scalaのメソッド宣言は、defから始める。
+\item Scalaではクラスメソッドはなく、すべてインスタンスメソッドとなる。
+\item メソッドの引数の型は引数名の後ろに記述する。
+\item 配列はArrayクラスを利用する。
+\item メソッドの戻り値の型は引数ブロックの後ろにコロン(:)に続けて記述する。Unitは値を返さないという意味。
+\item メソッド本体のブロックは、戻り値の型の後ろにイコール(=)に続けて記述する。
+\end{enumerate}
+\end{screen}
+
 \end{figure}
