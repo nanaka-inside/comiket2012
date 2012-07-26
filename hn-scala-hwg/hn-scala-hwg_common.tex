@@ -13,10 +13,25 @@
 
 \usepackage{url}
 \usepackage{ascmac} 
-\usepackage[dvipdfm]{graphicx}
 \usepackage{makeidx}
 \usepackage{listings,jlisting}
 \usepackage{color}
+\usepackage[dvipdfm]{hyperref,graphicx}
+
+\renewcommand{\lstlistingname}{リスト}
+\lstset{language=[objective]c,
+  basicstyle=\ttfamily\scriptsize,
+  commentstyle=\textit,
+  classoffset=1,
+  keywordstyle=\bfseries,
+  frame=tRBl,
+  framesep=5pt,
+  showstringspaces=false,
+  %  numbers=left,
+   stepnumber=1,
+   numberstyle=\tiny,
+   tabsize=2
+}
  
 % "define" Scala
 \lstdefinelanguage{scala}{
