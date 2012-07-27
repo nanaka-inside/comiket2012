@@ -8,6 +8,6 @@ mendex -f index.idx
 platex -shell-escape index.tex
 dvipdfmx index 
 
-mv index.pdf build-environment
+dvipdfmx -p b5 -c -r 600 -v -V 3 -o build-environment/index.pdf index
 
 find -type f \( -name "*aux" -or -name "*out" -or -name "*toc" -or -name "*ilg" -or -name "*dvi" -or -name "*log" \) -exec rm {} \;
