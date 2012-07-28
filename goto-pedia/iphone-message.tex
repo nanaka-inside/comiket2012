@@ -110,20 +110,20 @@ NSUserDefaultsの説明に「他のアプリの設定へのaddSuiteNamed:を使�
 あまり関係ないのですが、iPhoneでforkすればAndroidのServiceのようなことができるのではないかと思って試してみました。
 forkというのは自分のプロセスを複製して新しいプロセスを作るPOSIXの関数です。
 試しにこんなコードを書いてみました：
-\begin{lstlisting}{language=c;caption=fork}
+\begin{lstlisting}{language=c, caption=fork}
 int pid = fork();
-	if (pid < 0) {
-		NSLog(@"fork failed");
-	} else if (pid == 0) {
-		for (int i=0; i<1000; i++) {
-			NSLog(@"%d", i);
-			sleep(1);
-		}
-	} else {
-		int retVal = UIApplicationMain(argc, argv, nil, nil);
-		[pool release];
-		return retVal;
+if (pid < 0) {
+	NSLog(@"fork failed");
+} else if (pid == 0) {
+	for (int i=0; i<1000; i++) {
+		NSLog(@"%d", i);
+		sleep(1);
 	}
+} else {
+	int retVal = UIApplicationMain(argc, argv, nil, nil);
+	[pool release];
+	return retVal;
+}
 \end{lstlisting}
 フレームワークの追加をすることなく、コンパイル＆リンクには成功しました。
 
@@ -133,4 +133,5 @@ int pid = fork();
 \subsection{終わりに}
 一つのバックグラウンドアプリを立ち上げておき、他のアプリで利用するのが難しいことが、iOSとAndroidで大きく違うところだと個人的には感じています。
 今回は試しませんでしたが、OSが提供しているデータ共有のAPI、例えばカレンダーや写真を使う方法もあるでしょう。
+
 それではまたどこかでお会いしましょう。またねー。
