@@ -324,7 +324,7 @@ assert(result == Money(150))
 
 \begin{itembox}[l]{Scalaではプログラミングスタイルを関数型と命令型で使い分けできる}
 \small{本文中のplusメソッド(\lstRef{src:money_plus})ではthis(既存のインスタンス)のamountを変更せずに、新しいMoneyインスタンスを生成しています。実はこのメソッドは関数型を意識したプログラミングスタイルを採用しています。素直にMoneyのフィールドをvalではなくvarにして、thisのamountに加算してもよいはずです。}
-\begin{lstlisting}[language=scala, frame=none]
+\begin{lstlisting}[language=scala, frame=none, basicstyle=\small]
 class Money(var amount: BigDecimal, val currency: Currency) {
   def plus(other: Money): Unit = {
     require(other.currency == currency)
@@ -333,7 +333,7 @@ class Money(var amount: BigDecimal, val currency: Currency) {
 }
 \end{lstlisting}
 \small{Javaプログラマならこちらのメソッドの方がなじみ深いでしょう。このメソッドは従来からの命令型のプログラミングスタイルに沿っています。Scalaは関数型の特徴を持つ言語ですが、このような命令型のプログラミングスタイルも許容しています。命令型のplusメソッドでは、thisのamountの値を更新するのでthisの状態を変更することを意味します。2度目にplusメソッドが呼ばれた場合も、1度目のplusメソッドによる加算結果を保持するamountが利用されます。つまり、状態の変更はその後の処理に影響を与えます。例えば、状態の変更を起こすplusメソッドでテストコードを書いた場合はどのようになるのでしょうか。以下のテストコードを見てください。}
-\begin{lstlisting}[language=scala, frame=none]
+\begin{lstlisting}[language=scala, frame=none, basicstyle=\small]
 val currency = Currency.getInstance("JPY")
 val money = new Money(100, currency)
  // money.plus(new Money(20, currency)) (A)
