@@ -1,5 +1,5 @@
 \section{VPS+asteriskでオレオレコールセンター}
-\subsection{序}
+\subsection{はじめに}
 
 \begin{screen}
 \begin{center}
@@ -7,14 +7,14 @@
 \end{center}
 \end{screen}
 
-はじめまして。@tboffice\footnote{https://witter.com/tboffice}と申します。普段はモバイル系のwebサービスのインフラエンジニアぽいことをしています。よく書く言語はbashスクリプトです\footnote{grepたんsedたんawkたんｐｒｐｒ}。今回は、オレオレコールセンターを構築する話を書きます。
+はじめまして。@tboffice\footnote{https://twitter.com/tboffice}と申します。普段はモバイル系のwebサービスのインフラエンジニアぽいことをしています。よく書く言語はbashスクリプトです\footnote{grepたんsedたんawkたんｐｒｐｒ}。今回は、オレオレコールセンターを構築する話を書きます。
 
 冒頭の質問に戻ります。あなたは、朝、ちゃんと起きていますか？言い訳してるんじゃないですか？早く起きるのは無理だって、諦めているんじゃないんですか？\footnote{駄目だ駄目だ！あきらめちゃだめだ！できる！できる！絶対にできるんだから！}そんなあなたに、最適なソリューションをお届けします。電話を自動でかけてもらう、モーニングコールサービスを作ります。
 
 モーニングコールのサービスについてはいくつか種類があります。たとえば、人間が電話をかけてくれるサービス\footnote{モーニングコールどっとコム(http://www.morning-call.com/)}や、電話をとると音声を流すサービス\footnote{モーニングコール娘(http://hisui.on.arena.ne.jp/morning/pc/)や時報ちゃん(http://www.jihouchan.com/)}があげられます。ここでは、幸いなことにインフラエンジニアは電話が鳴るといつでも飛び起きるという習性があるので、これを利用します。
 
-\subsection{手段}
-モーニングコールをかけてもらうためには、どこかから電話をかけなければいけません。そもそも、電話とは何でしょうか。それだけで同人誌1冊できあがってしまうので省略します\footnote{知識が乏しいので説明回避してるだけ}。我々が電話を使うためには、固定電話回線を引くか、携帯電話か、IP電話かという選択肢があります。今回の目的を達成するには、ある程度自由が効く\footnote{人間が介さず、電話の発信・受信についてプログラマブルであるという意味}IP電話を使います。IP電話といっても、ざっくりとハードウエアとソフトウエアに分かれていて、ハードウエアの場合はYAMAHAのルータや、SOHO・中小企業向けのハードウエアを使うという選択肢があります。しかし、個人で使うには敷居が高ので、ハードウエアがごにょごにょしている部分をソフトウエアで実現しているasteriskを使います。asterisk単体だと内線システムを作ることができます。今回の目的である電話に発信や着信をするには、電話回線に取り次いでくれるプロバイダ\footnote{そのようなプロバイダをITSP(Internet Telephony Service Provider)という}への契約が必要になります。
+\subsubsection{手段}
+モーニングコールをかけてもらうためには、どこかから電話をかけなければいけません。そもそも、電話とは何でしょうか。それだけで同人誌1冊できあがってしまうので省略します\footnote{知識が乏しいので説明回避してるだけ}。我々が電話を使うためには、固定電話回線を引くか、携帯電話か、IP電話かという選択肢があります。今回の目的を達成するには、ある程度自由が効く\footnote{人間が介さず、電話の発信・受信についてプログラマブルであるという意味}IP電話を使います。IP電話といっても、ざっくりとハードウエアとソフトウエアに分かれていて、ハードウエアの場合はYAMAHAのルータや、SOHO・中小企業向けのハードウエアを使うという選択肢があります。しかし、個人で使うには敷居が高いので、ハードウエアがごにょごにょしている部分をソフトウエアで実現しているasteriskを使います。asterisk単体だと内線システムを作ることができます。今回の目的である電話に発信や着信をするには、電話回線に取り次いでくれるプロバイダ\footnote{そのようなプロバイダをITSP(Internet Telephony Service Provider)という}への契約が必要になります。
 
 電話回線に取り次いでくれるプロバイダといば、NTTのフレッツのひかり電話や、ASAHI-NETのIP電話cなどです。もしご自宅でそれらのサービスと契約していれば、それをそのままつかいます\footnote{事例はネットに転がっているので参照してください}。今回はそれらのサービスを使わず、プロバイダに依存しないアジルネットワークスのクラウドPBXを使います。asteriskは、筆者が契約していたVPSにインストールします。
 
@@ -22,13 +22,13 @@
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=100mm]{tboffice-asterisk/img/gaiyou.eps}
+  \includegraphics[width=70mm]{tboffice-asterisk/img/gaiyou.eps}
  \end{center}
  \caption{構築するシステム図}
  \label{fig:gaiyou}
 \end{figure}
 
-\subsection{asteriskとは}
+\subsubsection{asteriskとは}
 GPL2ライセンスのIP-PBXのソフトウエアです。SIPをしゃべることができるので、電話回線に取り次いでくれるプロバイダが提供しているSIPとおしゃべりして、携帯電話や固定電話などへ着信や発信ができます。ただし、実際に発信着信するためにはソフトフォンやSIP対応の電話機などが必要です\footnote{もちろん常時インターネットに接続されていることが必要です}。ダウンロードや設定ファイルの書き方は、asterisk の公式サイト www.asterisk.org を参照してください。
 
 \begin{figure}[htbp]
@@ -36,23 +36,23 @@ GPL2ライセンスのIP-PBXのソフトウエアです。SIPをしゃべるこ�
   \includegraphics[width=100mm]{tboffice-asterisk/img/asterisk-site.eps}
  \end{center}
  \caption{www.asterisk.org}
- \label{fig:gaiyou}
+ \label{fig:asterisk-site}
 \end{figure}
 
 
-\subsection{\textbf{!注意!}}
+\subsubsection{\textbf{!注意!}}
 ここで解説する方法は、電話番号に対して電話をかけることができるので、電話番号の間違いには十分注意してください。冗談抜きのいたずら電話は絶対にするなよ！おっちゃんとの約束だぞ!!
 
-\subsection{アジルクラウドPBXと契約}
+\subsubsection{アジルクラウドPBXと契約}
 アジルクラウドPBXに申し込みましょう。「SIPトランク」と「電話番号」を契約します。SIPトランクを契約すると、SIPサーバのサーバ名が払い出されます。初期費用は1800円、月額1800円(月途中は日割り)です。
 
 電話番号は、東京03, 大阪06, 横浜045や、050などの番号を初期費用200円、月額200円/番号で取得することが出来ます。住んでもいないところの市外局番がとれるのは、なんともクラウドらしいですね。ちなみに0120もとれますが、お値段張ります。0120に限らず、取得できる電話番号はある程度プールを持っているらしく、検索することが出来ます。が、なかなかよい番号はないです。申し込んでから使えるようになるまで2-3日くらいかかります。
 
-\subsection{VPSと契約}
+\subsubsection{VPSと契約}
 筆者は、たまたまKDDIウェブコミュニケーションズのCloudCoreVPS\footnote{http://www.cloudcore.jp/vps/}の基本スペックで契約していたのでそれを使います。asteriskをインストールできる環境さえあれば、自宅サーバでもよいです\footnote{もし自宅サーバで、ローカルIP配下にasteriskサーバがある場合は「NAT越え」というハードルを越えてください。今回、グローバルipが直接ついているサーバを使っているので、説明は省きます}。VPSのスペックは、メモリ2G、CPUは1core 2.2G \footnote{AMD Phenom(tm) 9550 Quad-Core Processor /proc/cpuinfoより}、OSはCentOS 5.8 64bit版です。
 
-\section{環境構築}
-\subsection{asteriskをインストールする}
+\subsection{環境構築}
+\subsubsection{asteriskをインストールする}
 
 まず、VPSの環境は、ほぼデフォルトの状態だったので、足りないパッケージをインストールします。
 
@@ -88,7 +88,7 @@ AST_CONFIG=/usr/local/asterisk/etc/asterisk
 AST_SBIN=/usr/local/asterisk/sbin
 \end{lstlisting}
 
-\subsection{asteriskをasteriskユーザで起動したいとき}
+\subsubsection{asteriskをasteriskユーザで起動したいとき}
 デフォルトではasteriskはroot権限で動作します。asteriskユーザで起動したいときは、asteriskユーザを作って /etc/init.d/asterisk の下記を設定します。
 
 \begin{lstlisting}[language=bash]
@@ -98,7 +98,7 @@ AST_GROUP="asterisk"
 
 あわせて、インストール後に、asterisk.conf の astctlowner と astctrlgroup を asterisk にしておくと吉。後述の cli で使うときにつかうソケットファイルのowner, groupとなります。
 
-\subsection{asteriskを設定する}
+\subsubsection{asteriskを設定する}
 重要なのは下記の2ファイルです。
 \begin{itemize}
 \item sip.conf
@@ -119,7 +119,7 @@ key=value や object=\textgreater name は、[samplesection] のグループの�
 
 /usr/local/asterisk/etc/asterisk/sip.conf ファイルを見ていきましょう。ITSPに接続するためのアカウント情報などを書きます。
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash,basicstyle=\scriptsize]
 
 [general]
 allowguest=no
@@ -169,7 +169,7 @@ context=outbound-1
 
 次に、 /usr/local/asterisk/etc/asterisk/extensions.conf をみてみましょう。かかってきた電話に対してどのような動作をするのかを記述しています。
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash,basicstyle=\scriptsize]
 [general] 
 writeprotect=no 
 priorityjumping=yes 
@@ -236,7 +236,7 @@ $ /usr/local/asterisk/sbin/asterisk -rv
 
 さて、asteriskも起動したことなので、電話をかければmp3が再生されるはずです。あとはソフトフォン\footnote{筆者はなんとなくZoiperを使っています。ソフトフォンもいくつか種類があるので比べてみると良いです}でregiSterして電話番号を入力すると電話かかることを確認してください。横道にそれるのでこれ以上は説明しません。ヒントは、extensions.confの[200]ディレクティブです。
 
-\subsection{モーニングコール}
+\subsubsection{モーニングコール}
 電話をかけるファイルを用意します。
 
 \begin{lstlisting}[language=bash]
@@ -266,7 +266,7 @@ cp ~/etc/autocall.dial /usr/local/asterisk/var/spool/asterisk/outgoing/
 
 もう一つ気をつけることは、/usr/local/asterisk/var/spool/asterisk/outgoing/に放り込まれたautocall.dialのファイルは、起動中のasteriskから読め、且つ、ファイルが消せる状態でないといけません。
 
-\section{FUSION IP-Phone SMARTがやってきた}
+\subsection{FUSION IP-Phone SMARTがやってきた}
 話題はがらっと変わります。IP電話にも新しい風が入って参りました。フュージョンコミュニケーションズのFUSION IP-Phone SMARTというサービスが2012/5/15にベータ版でリリースされました。このサービスは、図のSIPサーバ(SIPトランク)にあたります。つまり、asteriskからregistered\footnote{SIPで接続ができるという意味。cliのコマンドでshow sip registry と打つとregisteredと出てくることから筆者はそう呼んでいます}できます。また基本料金が不要で、通話料のみで電話をかけることができます。そして、IP-Phone SMART同士ならタダ…アジルフォンを使う理由が薄まってしまいました。
 
 今回の記事で、sip.conf, extensions.confに[chiaki]というディレクティブがありますが、実はそれがFUSION IP-Phone SMART用の設定です。設定はすでに書いてあるので、sip.confの下記の設定を有効にして\footnote{;をはずすだけ}asteriskを再起動\footnote{再起動がいやや、という方はCLIでconfig reload /usr/local/asterisk/etc/asterisk/sip.confしてもおｋ}すると、FUSION IP-Phone SMARTとregistered状態となります。
@@ -277,18 +277,26 @@ register => 58XXXXXX: passwd@chiaki
 
 アジルクラウドPBXを使うメリットは、IP電話と分かられない電話番号\footnote{050 で始まらない番号}が取得できるくらいですかね。アジルフォン側で設定次第で会話の録音をやってくれますが、asteriskでextension書けば、通話の録音は出来るはず\footnote{未検証}。
 
+
 私自身は、iphoneのSIPクライアントアプリであるmedia5-Fone for iPhone\footnote{http://www.media5corp.com/en/softphones/media5-fone-iphone/}で直接SIPサーバとregisteredして使っています。アジルフォンとIP電話同士で音質がどうなるのか検証用です。着信をするなら、アプリでSIPクライアントアプリを常時起動しておかねばならず、電池を食います。
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=50mm]{tboffice-asterisk/img/media5.eps}
+ \end{center}
+ \caption{media5-Fone for iPhoneの起動中画面}
+ \label{fig:media5}
+\end{figure}
 
-\section{まとめ}
-asteriskは企業の内線電話を低価格で実現できる用途で使うのが一般的\footnote{http://voip-info.jp/index.php/導入事例}です。asteriskの記事を初心者向けに書くなら、「ソフトフォン \textless = \textgreater asterisk \textless = \textgreater ソフトフォン」の設定をやって「オレオレSKypeサーバ」などから始めるのが一般的だとは思います。asteriskを全く知らない人にしてみれば、この自動発信はかなり敷居が高いと思います。ITSPの契約や、SIPサーバの接続の方法、設定ファイル、outgoingファイルを理解しないといけません。さらに運用面では、セキュリティーにも注意しないといけません。SIPポートにアクセスしてきてアカウントを総当たりし、勝手に電話をかけられてしまう可能性があります\footnote{http://www.voip-info.jp/index.php/Asterisk\_SIP\_セキュリティ}。もちろん発信者がお金を払うので、ちまたで流行のクラウドPBX破産\footnote{きぃたことねぇよ}が起きるかもしれません。十分注意しましょう。
+\subsection{まとめ}
+asteriskは企業の内線電話を低価格で実現できる用途で使うのが一般的\footnote{http://voip-info.jp/index.php/導入事例}です。asteriskの記事を初心者向けに書くなら、「ソフトフォン \textless = \textgreater asterisk \textless = \textgreater ソフトフォン」の設定をやって「オレオレSkypeサーバ」などから始めるのが一般的だとは思います。asteriskを全く知らない人にしてみれば、この自動発信はかなり敷居が高いと思います。ITSPの契約や、SIPサーバの接続の方法、設定ファイル、outgoingファイルを理解しないといけません。さらに運用面では、セキュリティーにも注意しないといけません。SIPポートにアクセスしてきてアカウントを総当たりし、勝手に電話をかけられてしまう可能性があります\footnote{http://www.voip-info.jp/index.php/Asterisk\_SIP\_セキュリティ}。もちろん発信者がお金を払うので、ちまたで流行のクラウドPBX破産\footnote{きぃたことねぇよ}が起きるかもしれません。十分注意しましょう。
 
-\subsection{実際に運用してみて}
+\subsubsection{実際に運用してみて}
 携帯のアラームでも、人間の耳にとっては同じです\footnote{当たり前}。携帯の画面を見ると、発信者の電話番号が書いてあります。それを見ることによって、比較的起きる確率は上がったように感じます\footnote{小学生のころ、小学生新聞なるものがありまして、相談コーナーというものがありました。「朝早く起きるには」という問いに対して、「強い意志が必要」と回答がありました。今見ても至言だと思います。修造も言っています。あきらめちゃだめだ！できる！できる！絶対にできるんだから！}。逆に、携帯のアラームで画面に着信しているように見せかける着メロがあれば…いやー売れないだろう\footnote{そもそもキャリアに怒られそう}。
 
 \subsection{次回}
 iPhoneでSIPアプリ立ち上げておくと思ったより電池が減ります。appleのPUSH通知でアプリ起動できるらしいという噂話を聞いたので挑戦してみたいところ。あるいは基本に戻ってオレオレSkypeなど要望があれば書くかもしれません。はたまた全く別のことを書くかもしれません。
 
-\section{参考文献}
+\subsection{参考文献}
 \begin{itemize}
 \item Asterisk- The Open Source Telephony Projects | Asterisk - http://www.asterisk.org/
 \item 『Asterisk　運用・開発ガイド』 オーム社
