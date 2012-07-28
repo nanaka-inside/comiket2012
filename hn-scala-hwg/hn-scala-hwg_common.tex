@@ -21,7 +21,12 @@
 
 \pagestyle{fancy}
 
-%% フッターの設定
+%% ヘッダーの設定(一つ目が偶数ページ用、２つ目が奇数ページ用)
+\lhead[\rightmark]{}
+\chead[]{}
+\rhead[]{\rightmark}
+
+%% フッターの設定(一つ目が偶数ページ用、２つ目が奇数ページ用)
 \lfoot[ななか +inside press ◆ \thepage]{}
 \cfoot[]{}
 \rfoot[]{ななか +inside press ◆ \thepage}
