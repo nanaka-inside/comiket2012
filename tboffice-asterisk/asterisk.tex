@@ -2,26 +2,23 @@
 \subsection{序}
 
 \begin{screen}
- \begin{center}
+\begin{center}
 突然ですが、きちんと起きることができますかー？
 \end{center}
 \end{screen}
 
-はじめまして。@tboffice\footnote{twitter.com/tboffice}と申します。普段はモバイル系のwebサービスのインフラエンジニアぽいことをしています。よく書く言語はbashスクリプトです。いろいろな都合により、オレオレコールセンターを構築する話を書くことにしました。
+はじめまして。@tboffice\footnote{https://witter.com/tboffice}と申します。普段はモバイル系のwebサービスのインフラエンジニアぽいことをしています。よく書く言語はbashスクリプトです\footnote{grepたんsedたんawkたんｐｒｐｒ}。今回は、オレオレコールセンターを構築する話を書きます。
 
 冒頭の質問に戻ります。あなたは、朝、ちゃんと起きていますか？言い訳してるんじゃないですか？早く起きるのは無理だって、諦めているんじゃないんですか？\footnote{駄目だ駄目だ！あきらめちゃだめだ！できる！できる！絶対にできるんだから！}そんなあなたに、最適なソリューションをお届けします。電話を自動でかけてもらう、モーニングコールサービスを作ります。
 
 モーニングコールのサービスについてはいくつか種類があります。たとえば、人間が電話をかけてくれるサービス\footnote{モーニングコールどっとコム(http://www.morning-call.com/)}や、電話をとると音声を流すサービス\footnote{モーニングコール娘(http://hisui.on.arena.ne.jp/morning/pc/)や時報ちゃん(http://www.jihouchan.com/)}があげられます。ここでは、幸いなことにインフラエンジニアは電話が鳴るといつでも飛び起きるという習性があるので、これを利用します。
 
 \subsection{手段}
-モーニングコールをかけてもらうためには、どこかから電話をかけなければいけません。そもそも、電話とは何でしょうか。それだけでおそらく同人誌1冊できあがってしまうので省略します\footnote{知識が乏しいので説明回避！}。我々が電話を使うためには、固定電話回線を引くか、携帯電話か、IP電話かという選択肢があります。今回の目的を達成するには、ある程度自由が効く\footnote{人間が介さず、電話の発信・受信についてプログラマブルであるという意味}IP電話を使います。IP電話といっても、ざっくりとハードウエアとソフトウエアに分かれていて、ハードウエアの場合はYAMAHAのルータや、SOHO・中小企業向けのハードウエアを使うという選択肢があります。しかし、個人で使うには敷居が高ので、ハードウエアがごにょごにょしている部分をソフトウエアで実現しているasteriskを使います。asterisk単体だと内線システムを作ることができます。電話に発信や着信をするには、電話回線に取り次いでくれるプロバイダ\footnote{そのような
-プロバイダをITSP(Internet Telephony Service Provider)という}への契約が必要になります。
+モーニングコールをかけてもらうためには、どこかから電話をかけなければいけません。そもそも、電話とは何でしょうか。それだけで同人誌1冊できあがってしまうので省略します\footnote{知識が乏しいので説明回避してるだけ}。我々が電話を使うためには、固定電話回線を引くか、携帯電話か、IP電話かという選択肢があります。今回の目的を達成するには、ある程度自由が効く\footnote{人間が介さず、電話の発信・受信についてプログラマブルであるという意味}IP電話を使います。IP電話といっても、ざっくりとハードウエアとソフトウエアに分かれていて、ハードウエアの場合はYAMAHAのルータや、SOHO・中小企業向けのハードウエアを使うという選択肢があります。しかし、個人で使うには敷居が高ので、ハードウエアがごにょごにょしている部分をソフトウエアで実現しているasteriskを使います。asterisk単体だと内線システムを作ることができます。今回の目的である電話に発信や着信をするには、電話回線に取り次いでくれるプロバイダ\footnote{そのようなプロバイダをITSP(Internet Telephony Service Provider)という}への契約が必要になります。
 
-電話回線に取り次いでくれるプロバイダといば、NTTのフレッツのひかり電話や、ASAHI-NETのIP電話cなどです。もしご自宅でそれらのサービスと契約していれば、それをそのままつかいます\footnote{事例はネットに転がってます}。今回はそれらのサービスを使わず、プロバイダに依存しないアジルネットワークスのクラウドPBXを使います。asteriskは、筆者が契約していたVPSにインストールします。
+電話回線に取り次いでくれるプロバイダといば、NTTのフレッツのひかり電話や、ASAHI-NETのIP電話cなどです。もしご自宅でそれらのサービスと契約していれば、それをそのままつかいます\footnote{事例はネットに転がっているので参照してください}。今回はそれらのサービスを使わず、プロバイダに依存しないアジルネットワークスのクラウドPBXを使います。asteriskは、筆者が契約していたVPSにインストールします。
 
-ここまでをまとめると、VPSにasteriskをインストールし、アジルクラウドPBXと契約してモーニングコールを行うオレオレコールセンターを構築します。
-
-簡単に今回の流れを図にまとめるとこうなります。
+ここまでをまとめると、VPSにasteriskをインストールし、アジルクラウドPBXと契約してモーニングコールを行うオレオレコールセンターを構築します。簡単に今回の流れを図にまとめるとこうなります。
 
 \begin{figure}[htbp]
  \begin{center}
@@ -32,7 +29,16 @@
 \end{figure}
 
 \subsection{asteriskとは}
-GPL2ライセンスのIP-PBXのソフトウエアです。SIPをしゃべることができるので、電話回線に取り次いでくれるプロバイダが提供しているSIPとおしゃべりして、携帯電話や固定電話などへ着信や発信ができます。ただし、実際に発信着信するためにはソフトフォンやSIP対応の電話機などが必要です\footnote{もちろん常時インターネットに接続されていることが必要です}。
+GPL2ライセンスのIP-PBXのソフトウエアです。SIPをしゃべることができるので、電話回線に取り次いでくれるプロバイダが提供しているSIPとおしゃべりして、携帯電話や固定電話などへ着信や発信ができます。ただし、実際に発信着信するためにはソフトフォンやSIP対応の電話機などが必要です\footnote{もちろん常時インターネットに接続されていることが必要です}。ダウンロードや設定ファイルの書き方は、asterisk の公式サイト www.asterisk.org を参照してください。
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=100mm]{tboffice-asterisk/img/asterisk-site.eps}
+ \end{center}
+ \caption{www.asterisk.org}
+ \label{fig:gaiyou}
+\end{figure}
+
 
 \subsection{\textbf{!注意!}}
 ここで解説する方法は、電話番号に対して電話をかけることができるので、電話番号の間違いには十分注意してください。冗談抜きのいたずら電話は絶対にするなよ！おっちゃんとの約束だぞ!!
@@ -47,20 +53,21 @@ GPL2ライセンスのIP-PBXのソフトウエアです。SIPをしゃべるこ�
 
 \section{環境構築}
 \subsection{asteriskをインストールする}
-アジルフォンが推奨しているasteriskのバージョンをインストールします。
+
+まず、VPSの環境は、ほぼデフォルトの状態だったので、足りないパッケージをインストールします。
+
+\begin{lstlisting}[language=bash]
+# yum install gcc gcc-c++ make libxml2-devel libtermcap-devel
+\end{lstlisting}
+
+次に、アジルフォンが推奨しているasteriskのバージョンをインストールします\footnote{本当は1行ですが、はみ出すので改行しています}。
 
 \begin{lstlisting}[language=bash]
 $ wget http://downloads.asterisk.org/pub/telephony/
 asterisk/old-releases/asterisk-1.6.2.9.tar.gz
 \end{lstlisting}
 
-VPSの環境は、ほぼデフォルトの状態だったので、足りないパッケージをインストールします。
-
-\begin{lstlisting}[language=bash]
-# yum install gcc gcc-c++ make libxml2-devel libtermcap-devel
-\end{lstlisting}
-
-コンパイルします。prefix は好みで。ディレクトリ構成が独特ですがそのうち慣れます。
+tar.gzがダウンロードできたら、適当なディレクトリに解答してコンパイルします\footnote{のーみそこねｋ}。prefix は好みで。ディレクトリ構成が独特ですがそのうち慣れます\footnote{make menuconfigまたはcmennuconfigあたりで、asteriskで使うモジュールの選択ができます。うまく使えば、バイナリサイズの圧縮になります。ただしモジュールがものすごく多いので気をつけてください}。
 
 \begin{lstlisting}[language=bash]
 $ ./configure --prefix=/usr/local/asterisk
@@ -75,6 +82,7 @@ $ vi /etc/init.d/asterisk
 \end{lstlisting}
 
 AST\_CONFIGとAST\_SBINを下記に書き換え。
+
 \begin{lstlisting}
 AST_CONFIG=/usr/local/asterisk/etc/asterisk
 AST_SBIN=/usr/local/asterisk/sbin
@@ -96,8 +104,7 @@ AST_GROUP="asterisk"
 \item sip.conf
 \item extensions.conf
 \end{itemize}
-これらのファイルは、/usr/local/asterisk/etc/asteriskにあります。
-confファイルの基本的な書き方はこのようになります。
+これらのファイルは、/usr/local/asterisk/etc/asteriskにあります。設定ファイルの基本的な書き方はこのようになります。
 
 \begin{lstlisting}[language=bash]
 [samplesection]
@@ -110,9 +117,7 @@ key=value や object=\textgreater name は、[samplesection] のグループの�
 
 ここではアジルクラウドPBXのasteriskの設定ファイルの設定方法はアナウンスされているのでそれを参照しました\footnote{http://www.agile.ne.jp/pdf/asterisk.pdf}。重要なのは、sip.confのcontextの値は、extension.confのディレクティブに対応する、ということです。これは重要です\footnote{大事なことなので（ｒｙ}。
 
-\begin{lstlisting}[language=bash]
-$ vim /usr/local/asterisk/etc/asterisk/sip.conf
-\end{lstlisting}
+/usr/local/asterisk/etc/asterisk/sip.conf ファイルを見ていきましょう。ITSPに接続するためのアカウント情報などを書きます。
 
 \begin{lstlisting}[language=bash]
 
@@ -132,22 +137,19 @@ register => 000020XXXX: passwd@marika
 
 [marika]
 type=friend
-username=<アジルフォンのsipトランクのuid(内線番号ぽいの)>
-
+username=0000XXXXXX
 secret=bentenmaru
-
 context=autocall
-;context=inbound
 canreinvite=no
 host=voip30XX.agile.ne.jp
 insecure=port,invite
 disallow=all
 allow=ulaw
-fromuser=<03電話番号>
+fromuser=03XXXXXXXX
 
 [chiaki]
 type=friend
-username=username
+username=58XXXXXX
 secret=passwd
 context=inbound
 canreinvite=no
@@ -162,12 +164,10 @@ username=200
 secret=fuga
 host=dynamic
 context=outbound-1
+
 \end{lstlisting}
 
-
-\begin{lstlisting}[language=bash]
-$ vim /usr/local/asterisk/etc/asterisk/extensions.conf
-\end{lstlisting}
+次に、 /usr/local/asterisk/etc/asterisk/extensions.conf をみてみましょう。かかってきた電話に対してどのような動作をするのかを記述しています。
 
 \begin{lstlisting}[language=bash]
 [general] 
@@ -181,59 +181,31 @@ FUSION_NUMBER=58XXXXXX
 [default] 
 exten => 999,1,Set(CALLERID(num)=${AGILE_NUMBER}) 
 exten => 999,n,Set(CALLERID(name)=${AGILE_NUMBER})
-exten => 999,n,
-MP3Player(/usr/local/asterisk/var/lib/asterisk/sounds/Hacking_to_the_Gate.mp3) 
+exten => 999,n,MP3Player(/tmp/Hacking_to_the_Gate.mp3) 
 exten => 999,n,Hangup 
 
 [inbound] 
 exten => ${AGILE_NUMBER},1,Answer 
 exten => ${AGILE_NUMBER},n,Dial(SIP/200,10,t) 
-exten => ${AGILE_NUMBER},n,
-MP3Player(/usr/local/asterisk/var/lib/asterisk/sounds/Hacking_to_the_Gate.mp3) 
+exten => ${AGILE_NUMBER},n,MP3Player(/tmp/Hacking_to_the_Gate.mp3) 
 exten => ${AGILE_NUMBER},n,Busy(3)
 exten => ${AGILE_NUMBER},n,Hangup 
 
 exten => ${FUSION_NUMBER},1,Answer
 exten => ${FUSION_NUMBER},n,Dial(SIP/200,10,t)
-exten => ${FUSION_NUMBER},n,
-MP3Player(/usr/local/asterisk/var/lib/asterisk/sounds/Hacking_to_the_Gate.mp3)
+exten => ${FUSION_NUMBER},n,MP3Player(/tmp/Hacking_to_the_Gate.mp3)
 exten => ${FUSION_NUMBER},n,Busy(3) 
 exten => ${FUSION_NUMBER},n,Hangup
 
-[outbound-1]
-exten => _0.,1,Set(CALLERID(num)=${AGILE_NUMBER}) 
-exten => _0.,n,Dial(SIP/${EXTEN}@marika,120,T)
-exten => _0.,n,Busy 
-
-exten => 999,1,Set(CALLERID(num)=${AGILE_NUMBER}) 
-exten => 999,n,Set(CALLERID(name)=${AGILE_NUMBER})
-exten => 999,n,Ringing
-exten => 999,n,Wait(3)
-exten => 999,n,Hangup
-
 [autocall]
-exten => ${AGILE_NUMBER},1,Answer
-exten => ${AGILE_NUMBER},n,Dial(SIP/200,10,t) 
-exten => ${AGILE_NUMBER},n,
-MP3Player(/usr/local/asterisk/var/lib/asterisk/sounds/Hacking_to_the_Gate.mp3)
-exten => ${AGILE_NUMBER},n,Busy(3)
-exten => ${AGILE_NUMBER},n,Hangup
-
-exten => _0.,1,Set(CALLERID(num)=${AGILE_NUMBER})
-exten => _0.,n,Set(CALLERID(name)=${AGILE_NUMBER})
-exten => _0.,n,Dial(SIP/$EXTEN@marika)
-
-exten => _1.,1,Set(CALLERID(num)=${AGILE_NUMBER})
-exten => _1.,n,Set(CALLERID(name)=${AGILE_NUMBER})
-exten => _1.,n,Dial(SIP/$EXTEN@marika)
-
 exten => 9999,1,Set(CALLERID(num)=${AGILE_NUMBER})
 exten => 9999,n,Set(CALLERID(name)=${AGILE_NUMBER})
-exten => 9999,n, MP3Player(/usr/local/asterisk/var/lib/asterisk/sounds/Hacking_to_the_Gate.mp3)
+exten => 9999,n, MP3Player(/tmp/Hacking_to_the_Gate.mp3)
 exten => 9999,n,Hangup
+
 \end{lstlisting}
 
-だいたいこんな感じです\footnote{モーパイみながら設定したからこうなっているのは内緒。fusionという記述が見えますがあとで補足します}。いつみてもキモイ記述方法ですね\footnote{遠い目をしながら}。電話をかけたら、MP3ファイルを再生するようにしています。あらかじめ、``Hacking\_to\_the\_Gate.mp3''というMP3のファイルを用意しておきます\footnote{選曲の理由はシュタゲ好きの人がいたので。ここだけの話、pediarouteの人らしいですよ}。mp3を再生するにはmpg123が必要なので、サーバにインストールされているか調べておきましょう。用意できれば、asteriskを起動しみます。
+だいたいこんな感じです\footnote{モーパイみながら設定したからこうなっているのは内緒。fusionという記述が見えますがあとで補足します}。いつみてもキモイ記述方法ですね\footnote{遠い目をしながら}。電話をかけたら、MP3ファイルを再生するようにしています。あらかじめ、``Hacking\_to\_the\_Gate.mp3''というMP3のファイル\footnote{ファイルパスが長かったので/tmpにしていますが、もともとは/usr/local/asterisk/var/lib/asterisk/sounds/Hacking\_to\_the\_Gate.mp3に配置しています}を用意しておきます\footnote{選曲の理由はシュタゲ好きの人がいたので。ここだけの話、pediarouteの人らしいですよ}。mp3を再生するにはmpg123が必要なので、サーバにインストールされているか調べておきましょう。用意できれば、asteriskを起動しみます。
 
 まず、asteriskを起動スクリプトでデーモンとして起動する前に、asteriskをCLIモード(コマンドで起動モード)で起動して様子を見ましょう\footnote{vはvorboseです。-vvvするほど、ログがうるさくなります。vは10個まで付けることが出来ます。同じく-d(debug)もあり-vと同じ効果をもたらすでしょう}。
 
@@ -283,7 +255,7 @@ Extension: 9999
 # cat bin/autocall.sh 
 #!/bin/bash
 cp ~/etc/autocall.dial /usr/local/asterisk/var/spool/asterisk/outgoing/
-chmod +x  bin/autocall.sh 
+# chmod +x bin/autocall.sh  #実行権限をつけるだけ
 \end{lstlisting}
 スクリプトを実行して、電話がかかってくることを確認しましょう。かかってこなかったら、設定に失敗しているか、だれか知らない人にかかっている可能性があります。
 次に、crontabに登録します。
@@ -295,12 +267,12 @@ chmod +x  bin/autocall.sh
 もう一つ気をつけることは、/usr/local/asterisk/var/spool/asterisk/outgoing/に放り込まれたautocall.dialのファイルは、起動中のasteriskから読め、且つ、ファイルが消せる状態でないといけません。
 
 \section{FUSION IP-Phone SMARTがやってきた}
-話題はがらっとかわります。IP電話にも新しい風が入って参りました。フュージョンコミュニケーションズのFUSION IP-Phone SMARTというサービスが2012/5/15にベータ版でリリースされました。このサービスは、図のSIPサーバ(SIPトランク)にあたります。つまり、asteriskからregistered\footnote{SIPで接続ができるという意味。cliのコマンドでshow sip registry と打つとregisteredと出てくることから筆者はそう呼んでいます}できます。また基本料金が不要で、通話料のみで電話をかけることができます。そして、IP-Phone SMART同士ならタダ…アジルフォンを使う理由が薄まってしまいました。
+話題はがらっと変わります。IP電話にも新しい風が入って参りました。フュージョンコミュニケーションズのFUSION IP-Phone SMARTというサービスが2012/5/15にベータ版でリリースされました。このサービスは、図のSIPサーバ(SIPトランク)にあたります。つまり、asteriskからregistered\footnote{SIPで接続ができるという意味。cliのコマンドでshow sip registry と打つとregisteredと出てくることから筆者はそう呼んでいます}できます。また基本料金が不要で、通話料のみで電話をかけることができます。そして、IP-Phone SMART同士ならタダ…アジルフォンを使う理由が薄まってしまいました。
 
-今回の記事で、sip.conf, extensions.confに[chiaki]というディレクティブがありますが、実はそれがFUSION IP-Phone SMART用の設定です。設定はすでに書いてあるので、sip.confの下記の設定を有効にしてasteriskを再起動\footnote{再起動がいやや、という方はCLIでconfig reload <フルパス>sip.confしてもおｋ}すると、FUSION IP-Phone SMARTとregistered状態となります。
+今回の記事で、sip.conf, extensions.confに[chiaki]というディレクティブがありますが、実はそれがFUSION IP-Phone SMART用の設定です。設定はすでに書いてあるので、sip.confの下記の設定を有効にして\footnote{;をはずすだけ}asteriskを再起動\footnote{再起動がいやや、という方はCLIでconfig reload /usr/local/asterisk/etc/asterisk/sip.confしてもおｋ}すると、FUSION IP-Phone SMARTとregistered状態となります。
 
 \begin{lstlisting}
-;register => 58XXXXXX: passwd@chiaki
+register => 58XXXXXX: passwd@chiaki
 \end{lstlisting}
 
 アジルクラウドPBXを使うメリットは、IP電話と分かられない電話番号\footnote{050 で始まらない番号}が取得できるくらいですかね。アジルフォン側で設定次第で会話の録音をやってくれますが、asteriskでextension書けば、通話の録音は出来るはず\footnote{未検証}。
@@ -314,12 +286,13 @@ asteriskは企業の内線電話を低価格で実現できる用途で使うの
 携帯のアラームでも、人間の耳にとっては同じです\footnote{当たり前}。携帯の画面を見ると、発信者の電話番号が書いてあります。それを見ることによって、比較的起きる確率は上がったように感じます\footnote{小学生のころ、小学生新聞なるものがありまして、相談コーナーというものがありました。「朝早く起きるには」という問いに対して、「強い意志が必要」と回答がありました。今見ても至言だと思います。修造も言っています。あきらめちゃだめだ！できる！できる！絶対にできるんだから！}。逆に、携帯のアラームで画面に着信しているように見せかける着メロがあれば…いやー売れないだろう\footnote{そもそもキャリアに怒られそう}。
 
 \subsection{次回}
-iPhoneでSIPアプリ立ち上げておくと思ったより電池が減ります。appleのPUSH通知でアプリ起動できるらしいという噂話を聞いたので挑戦してみたいところ。あるいは基本に戻ってオレオレSkypeなど要望があれば書くかもしれません。
+iPhoneでSIPアプリ立ち上げておくと思ったより電池が減ります。appleのPUSH通知でアプリ起動できるらしいという噂話を聞いたので挑戦してみたいところ。あるいは基本に戻ってオレオレSkypeなど要望があれば書くかもしれません。はたまた全く別のことを書くかもしれません。
 
 \section{参考文献}
-Asterisk- The Open Source Telephony Projects | Asterisk - http://www.asterisk.org/
-『Asterisk　運用・開発ガイド』 オーム社
-VOIP-Info.jp Wiki - http://www.voip-info.jp
-asteriskでモーニングコール - http://enjoy.potix.jp/diary/asteriskでモーニングコール
-agile networks TOP | アジルモバイルセントレックス、アジルクラウドPBX | アジルネットワークス株式会社 - http://www.agile.ne.jp/
-
+\begin{itemize}
+\item Asterisk- The Open Source Telephony Projects | Asterisk - http://www.asterisk.org/
+\item 『Asterisk　運用・開発ガイド』 オーム社
+\item VOIP-Info.jp Wiki - http://www.voip-info.jp
+\item asteriskでモーニングコール - http://enjoy.potix.jp/diary/asteriskでモーニングコール
+\item agile networks TOP | アジルモバイルセントレックス、アジルクラウドPBX | アジルネットワークス株式会社 - http://www.agile.ne.jp/
+\end{itemize}
