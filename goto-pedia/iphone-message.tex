@@ -1,5 +1,6 @@
 \section{iPhoneで他のアプリと連携}
 こんにちは。会社や趣味でiPhoneアプリを作ったりしている@mtgtoです。
+二回目の登場でございます。
 今までに複数のiPhoneアプリを作っているのですが、アプリ間の連携をやったりしたことがありました。
 AndroidのServiceのような仕組みがないiOSではアプリ間の連携はあまり得意ではないようですが、気になったので色々と調べたり試したりしてみました。
 
@@ -46,8 +47,7 @@ for (NSString* parameterString in [queryString componentsSeparatedByString:@"&"]
   NSLog(@"key=\%@, value=\%@", parameterKey, parameterValue);
 }
 \end{lstlisting}
-\subsubsection{Facebook SDK}
-\htmladdnormallinkfoot{Facebook iOS SDK}{https://developers.facebook.com/docs/mobile/ios/build/}ではこの仕組みを利用して、自作アプリからFacebookアプリを呼び出してユーザ認証などを行うことができます。
+例えば\htmladdnormallinkfoot{Facebook iOS SDK}{https://developers.facebook.com/docs/mobile/ios/build/}ではこの仕組みを利用して、自作アプリからFacebookアプリを呼び出してユーザ認証などを行うことができます。
 
 \subsection{ソケット通信}
 先のNSURL形式では情報を通知するために別アプリを一度フォアグラウンドにする必要があります。
@@ -131,5 +131,6 @@ int pid = fork();
 残念ながらforkはできないようです。
 
 \subsection{終わりに}
+一つのバックグラウンドアプリを立ち上げておき、他のアプリで利用するのが難しいことが、iOSとAndroidで大きく違うところだと個人的には感じています。
 今回は試しませんでしたが、OSが提供しているデータ共有のAPI、例えばカレンダーや写真を使う方法もあるでしょう。
-
+それではまたどこかでお会いしましょう。またねー。
