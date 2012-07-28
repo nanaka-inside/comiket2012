@@ -46,7 +46,8 @@ public class Money {
 
 \subsection*{Javaの資産を生かせる}
 \lstRef{src:money_scala}では通貨の単位を表すjava.util.Currnecyが利用されています。Scalaは実行環境にJava仮想マシン(Java VM)を利用するため、ScalaプログラムからJavaの機能をシームレスに利用することができるのです。このようにJavaとの親和性が高いのも大きな特徴です。Javaプログラマにとっては、オブジェクト指向の知識を生かしつつ関数型言語の考え方をスムーズに取り入れながら、Javaの資産も利用できるわけです。こうして見てくると、JavaプログラマがScalaに注目するのも当然のように思えてきませんか。Scalaは、Javaプログラマが次に学ぶに値する言語です。より品質の高いプログラムを書けるようになるためにScalaの知識はきっと役立ちます。早速、開発実行環境を整備して、Scalaのプログラミングスタイルを見ていきましょう。
-\subsection{統合開発環境の整備}
+
+\section{統合開発環境の整備}
 まずは、Scalaの開発環境をPCにインストールしましょう。前提条件を\tbRef{tb:scala_pre_conditions}にまとめましたのでお手元のPCのシステム環境を確認しておいてください。例えば、\lstRef{cmd:java_version}に示すコマンド(java -version)を実行することにより、Javaのバージョンが確認できます。
 
 \begin{table}[htb]
@@ -78,7 +79,7 @@ $ scala -version
 Scala code runner version 2.9.2 -- Copyright 2002-2011, LAMP/EPFL
 \end{lstlisting}
 
-\section{IntelliJ IDEA\index{IntelliJ}を使ってみよう}
+\subsection{IntelliJ IDEA\index{IntelliJ}を使ってみよう}
 次に、Scalaプログラミングに使える代表的な統合開発環境の一つ、「IntelliJ IDEA」をインストールしてみましょう。IntelliJ IDEAは、チェコ共和国に本社を構えるJetBrains社が提供するJava用の統合開発環境です。有償の製品ですが、Apacheライセンスを採用したオープンソース版「Community Edition」も用意されており、商用/非商用を問わず無償で利用できます。このIntelliJ IDEAにScala用のプラグインを追加することで、Scalaプログラミングが可能です。Eclipseでも同様にScalaプログラミングが可能ですが、現時点では動作の安定性でIntelliJ IDEAが勝ると思います。(インストール手順については別掲記事を参照)。
 
 \subsection{Scala対応プロジェクトを作成する}
