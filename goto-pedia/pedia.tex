@@ -1,4 +1,3 @@
-
 \section{Wikipediaで6回リンクたどればいけるか調べるサイトを一日で作った話}
 \subsection{概要}
 暑いですね。
@@ -8,12 +7,22 @@
 
 昨年の今頃、私はとあるSNSサービスの新規立ち上げの開発に携わっており、土日があったりなかったりという程度の忙しさに巻き込まれていました。
 ちょうどその頃は仕事も佳境にきており、私の仕事は品質保証テストで上がってきた問題の解決を行うということがほとんどでした。
+職業上仕方がないことなのですが、家に帰って寝るだけの日々に辟易していました。
 そんな折に「\htmladdnormallinkfoot{wikipediaは6回リンクを辿ればどのページでもいけるらしいｗｗｗ}{http://blog.livedoor.jp/goldennews/archives/51657545.html}」という記事をRSSリーダーで見かけました。
 
 私がこの記事を読んだ時に、ふと「これって自動で見つけられるのかな」と思ったところからこの話は始まります。
 
 なお3分クッキングよろしく\htmladdnormallinkfoot{実際に完成したサイト}{http://pediaroute.com/}がありますので、探索の仕組みやら作った時の苦労話に興味が無い方は読み飛ばしていただいて構いません。
 お手数ですが右上の×ボタンを押して閉じてください。
+
+例えば「ゆりかご」から「墓場」までをpediarouteで検索すると、
+\begin{figure}
+  \centering
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/yurikago-hakaba.png}
+  }
+\end{figure}
+探索時間0.00秒以内で「ゆりかご」→「木材」→「槍」→「レギオン」→「墓場」という解答を見つけることができます。
 
 \subsection{設計}
 知人の知人というように辿って行くとわずか6回辿るだけで世界中の人間に辿り着けるという話を聞いたことがあるでしょうか？
@@ -73,7 +82,22 @@ S_0 = {N_S}, G_0 = {N_G}
 \item 見つからなければ2. に戻る。5回探索しても見つからなかったらリンクがないと返す。
 \end{enumerate}
 \end{itembox}
-※図がほしい→KeyNoteのあれ
+\begin{figure}
+  \centering
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/pediaroute01.pdf}
+  }
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/pediaroute02.pdf}
+  }
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/pediaroute03.pdf}
+  }
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/pediaroute04.pdf}
+  }
+  \caption{探索の例}
+\end{figure}
 
 \subsubsection{使用言語の選択}
 今回の設計ではすべてのリンクをメモリ上におかなければなりません。
@@ -161,7 +185,11 @@ railsはそれなりに使ったことがあったのも良かったのかもビ
 身を持って慣れてないウェブフレームワークを使うことの難しさを再考させられる経験になりました。
 
 \subsubsection{そのあと}
+そのあとはちょいとある程度まともなデザインに仕上げたりしましたが、仕事が忙しいのと（そればっかり）飽きたのもあり、特に話題にもならず、ひっそりと忘れ去られて行きました。
+いや、まだあるけどね！この原稿をあなたが手にとっているときにまだサービス続けてるけどね！
+広告もつけてないから続ければ続けるほど損するシステムなんだけどね！
 
+wikitterの中の人とtwitterでやり取りしたりもしましたが、内容はないしょにしておきます。
 
 \subsection{まとめ、今後の予定}
 pediarouteの話はどこかで書こうと思っていたのですが、こういう形で過去の創作物の話をまとめることができて幸いでした。
