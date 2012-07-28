@@ -1,21 +1,22 @@
+\part{はじめてのScala早わかりガイド}
 \begin{screen}
-この1〜2年、開発者のコミュニティなどで 着実に人気が高まっているプログラミング言語が「Scala(スカラ、スケーラと読みます)」 です。本特集では、Javaプログラマ(見習いも含みます)に向けて、Scalaをなるべく簡潔にわかりやすくお伝えします。  
+この1〜2年、開発者のコミュニティなどで着実に人気が高まっているプログラミング言語が「Scala(スカラ、スケーラと読みます)」です。本特集では、Javaプログラマ(見習いも含みます)に向けて、Scalaをなるべく簡潔にわかりやすくお伝えします。
 \end{screen}
 
 Scalaは、スイス連邦工科大学ローザンヌ校のMartin Odersky(マーティン・オーダスキー)教授率いるチームが開発しているプログラミング言語です。オープンソース(BSDライセンスに似たSCALA LICENSE)で開発・公開されており、その範囲内で自由に利用できます。最初に、“なぜ、Scalaの人気が高まっているのか”を説明します。
 
-\section*{オブジェクト指向と関数型の特徴を備える} 
-Scalaは、オブジェクト指向に加えて関数型言語の特徴を備えた比較的新しい言語です。この、“オブジェクト指向に加えて”というのがポイントです。新しいパラダイム(問題解決のための考え方)を、従来のパラダイムに重ね合わせていることから、マルチパラダイムの言語ともいわれます。 ちなみにScalaという名前は、Scalable Language(拡張性のある言語)の短縮形です。そのスケーラブルという言葉には、「小さいプログラムも大規模なプログラムも同じ概念で記述できるべきである」という、柔軟性や拡張性を重視した言語設計の意図が込められています。 Scalaは、関数型言語の機能を取り込むことで、簡潔で明瞭なコーディング、言語自体の拡張性、バグを作り込みにくいプログラミングスタイル、並行処理向きなど、オブジェクト指向とは異なる特徴を持っています。簡潔な表現の一例として、同じ機能のクラスをScalaとJavaで書いたコードを\lstRef{src:money_scala}と\lstRef{src:money_java}に示します。 
+\subsection*{オブジェクト指向と関数型の特徴を備える}
+Scalaは、オブジェクト指向に加えて関数型言語の特徴を備えた比較的新しい言語です。この、“オブジェクト指向に加えて”というのがポイントです。新しいパラダイム(問題解決のための考え方)を、従来のパラダイムに重ね合わせていることから、マルチパラダイムの言語ともいわれます。ちなみにScalaという名前は、Scalable Language(拡張性のある言語)の短縮形です。そのスケーラブルという言葉には、「小さいプログラムも大規模なプログラムも同じ概念で記述できるべきである」という、柔軟性や拡張性を重視した言語設計の意図が込められています。Scalaは、関数型言語の機能を取り込むことで、簡潔で明瞭なコーディング、言語自体の拡張性、バグを作り込みにくいプログラミングスタイル、並行処理向きなど、オブジェクト指向とは異なる特徴を持っています。簡潔な表現の一例として、同じ機能のクラスをScalaとJavaで書いたコードを\lstRef{src:money_scala}と\lstRef{src:money_java}に示します。
 
 \begin{lstlisting}[language=scala, label=src:money_scala, caption=お金を表すクラスのScala版]
 // Scala版
 package money
 import java.util.Currency
 
-// amountはお金の量, currencyは通貨単位    
-class Money(val amount : BigDecimal, val currency : Currency)    
+// amountはお金の量, currencyは通貨単位
+class Money(val amount : BigDecimal, val currency : Currency)
 \end{lstlisting}
- 
+
 \begin{lstlisting}[language=java, label=src:money_java, caption=お金を表すクラスのJava版]
 package money;
 import java.util.Currency;
@@ -43,10 +44,10 @@ public class Money {
 }
 \end{lstlisting}
 
-\section*{Javaの資産を生かせる}
-\lstRef{src:money_scala}では通貨の単位を表すjava.util.Currnecyが利用されています。Scalaは実行環境にJava仮想マシン(Java VM)を利用するため、ScalaプログラムからJavaの機能をシームレスに利用することができるのです。このようにJavaとの親和性が高いのも大きな特徴です。Javaプログラマにとっては、オブジェクト指向の知識を生かしつつ関数型言語の考え方をスムーズに取り入れながら、Javaの資産も利用できるわけです。 こうして見てくると、JavaプログラマがScalaに注目するのも当然のように思えてきませんか。Scalaは、Javaプログラマが次に学ぶに値する言語です。より品質の高いプログラムを書けるようになるためにScalaの知識はきっと役立ちます。早速、開発実行環境を整備して、Scalaのプログラミングスタイルを見ていきましょう。
-\part{統合開発環境の整備}
-まずは、Scalaの開発環境をPCにインストールしましょう。前提条件を\tbRef{tb:scala_pre_conditions}にまとめましたのでお手元のPCのシステム環境を確認しておいてください。例えば、\lstRef{cmd:java_version}に示すコマンド(java -version)を実行することにより、Javaのバージョンが確認できます。 
+\subsection*{Javaの資産を生かせる}
+\lstRef{src:money_scala}では通貨の単位を表すjava.util.Currnecyが利用されています。Scalaは実行環境にJava仮想マシン(Java VM)を利用するため、ScalaプログラムからJavaの機能をシームレスに利用することができるのです。このようにJavaとの親和性が高いのも大きな特徴です。Javaプログラマにとっては、オブジェクト指向の知識を生かしつつ関数型言語の考え方をスムーズに取り入れながら、Javaの資産も利用できるわけです。こうして見てくると、JavaプログラマがScalaに注目するのも当然のように思えてきませんか。Scalaは、Javaプログラマが次に学ぶに値する言語です。より品質の高いプログラムを書けるようになるためにScalaの知識はきっと役立ちます。早速、開発実行環境を整備して、Scalaのプログラミングスタイルを見ていきましょう。
+\subsection{統合開発環境の整備}
+まずは、Scalaの開発環境をPCにインストールしましょう。前提条件を\tbRef{tb:scala_pre_conditions}にまとめましたのでお手元のPCのシステム環境を確認しておいてください。例えば、\lstRef{cmd:java_version}に示すコマンド(java -version)を実行することにより、Javaのバージョンが確認できます。
 
 \begin{table}[htb]
   \caption{Scalaの開発環境をPCにインストールするときの前提条件}
@@ -54,7 +55,7 @@ public class Money {
     \begin{tabular}{|c|} \hline
       JDK7以上をインストールしてあること\\ \hline
       JDKのインストールパスをJAVA\_HOMEとして環境変数に登録してあること\\ \hline
-      \$JAVA\_HOME/binを環境変数のPathに追加してあること\\ \hline 
+      \$JAVA\_HOME/binを環境変数のPathに追加してあること\\ \hline
     \end{tabular}
   \end{center}
   \label{tb:scala_pre_conditions}
@@ -67,9 +68,9 @@ Java(TM) SE Runtime Environment (build 1.7.0_05-b06)
 Java HotSpot(TM) 64-Bit Server VM (build 23.1-b03, mixed mode)
 \end{lstlisting}
 
-\section{Scala配布ファイルのダウンロードと展開}
-それでは、Scala本体をインストールします。「Scala Distribution - The Scala Programming Language (\url{http://www.scala-lang.org/downloads})」のWebページから最新版であるscala-2.9.2.final.zip(2012年7月上旬現在) をダウンロードします。そして、scala-2.9.2.final.zipを任意のディレクトリ(フォルダ)に展開します。
-\section{環境変数を設定する}
+\subsection{Scala配布ファイルのダウンロードと展開}
+それでは、Scala本体をインストールします。「Scala Distribution - The Scala Programming Language (\url{http://www.scala-lang.org/downloads})」のWebページから最新版であるscala-2.9.2.final.zip(2012年7月上旬現在)をダウンロードします。そして、scala-2.9.2.final.zipを任意のディレクトリ(フォルダ)に展開します。
+\subsection{環境変数を設定する}
 ScalaをインストールしたディレクトリをSCALA\_HOMEとして環境変数に設定します。さらに、\$SCALA\_HOME/binをPATHに追加します(表2)。 本体のインストールはこれだけで終了です。以下のコマンドを実行してバージョン番号などが表示されれば正しく導入できています。
 
 \begin{lstlisting}[language=bash, frame=none]
@@ -78,10 +79,10 @@ Scala code runner version 2.9.2 -- Copyright 2002-2011, LAMP/EPFL
 \end{lstlisting}
 
 \section{IntelliJ IDEA\index{IntelliJ}を使ってみよう}
-次に、Scalaプログラミングに使える代表的な統合開発環境の一つ、「IntelliJ IDEA」をインストールしてみましょう。 IntelliJ IDEAは、チェコ共和国に本社を構えるJetBrains社が提供するJava用の統合開発環境です。 有償の製品ですが、Apacheライセンスを採用したオープンソース版 「Community Edition」も用意されており、商用/非商用を問わず無償で利用できます。このIntelliJ IDEAにScala用のプラグインを追加することで、Scalaプログラミングが可能です。Eclipseでも同様にScalaプログラミングが可能ですが、現時点では動作の安定性でIntelliJ IDEAが勝ると思います。(インストール手順については別掲記事を参照)。
+次に、Scalaプログラミングに使える代表的な統合開発環境の一つ、「IntelliJ IDEA」をインストールしてみましょう。IntelliJ IDEAは、チェコ共和国に本社を構えるJetBrains社が提供するJava用の統合開発環境です。有償の製品ですが、Apacheライセンスを採用したオープンソース版「Community Edition」も用意されており、商用/非商用を問わず無償で利用できます。このIntelliJ IDEAにScala用のプラグインを追加することで、Scalaプログラミングが可能です。Eclipseでも同様にScalaプログラミングが可能ですが、現時点では動作の安定性でIntelliJ IDEAが勝ると思います。(インストール手順については別掲記事を参照)。
 
-\section{Scala対応プロジェクトを作成する}
-早速、IntelliJ IDEAを使ってScalaプログラムを動かしてみましょう。文法についてはこの後の基礎編で説明します。 メニューから「File」→「New Project」を指定してください。New Projectのウィザードが表示されます。「Create project from scratch」が選択されている状態で「Next」を クリックしてください。 \figRef{fig:new_project}のようなプロジェクト名(Name:)やプロジェクトを配置するディレクトリ(Project files location:)、プロジェクトの形式(Create module)などを選択する画面が表示されます。プロジェクトの形式は通常、「Java Module」を選択します。 次に、ソースディレクトリを作成するか否かを指定する画面が表示されます。特に問題なければ、「Create source directory」を選択して「Next」 をクリックしてください。続いて開いた画面で、どのプラグインを有効にするかを 選択します。ここでは、「Scala」を選びます。Scala Settingsの「Use Scala distribution」は、SCALA\_HOMEが指定されていれば、そのパスが設定されているはずです。指定されていなければ手動で設定します。
+\subsection{Scala対応プロジェクトを作成する}
+早速、IntelliJ IDEAを使ってScalaプログラムを動かしてみましょう。文法についてはこの後の基礎編で説明します。メニューから「File」→「New Project」を指定してください。New Projectのウィザードが表示されます。「Create project from scratch」が選択されている状態で「Next」をクリックしてください。\figRef{fig:new_project}のようなプロジェクト名(Name:)やプロジェクトを配置するディレクトリ(Project files location:)、プロジェクトの形式(Create module)などを選択する画面が表示されます。プロジェクトの形式は通常、「Java Module」を選択します。次に、ソースディレクトリを作成するか否かを指定する画面が表示されます。特に問題なければ、「Create source directory」を選択して「Next」をクリックしてください。続いて開いた画面で、どのプラグインを有効にするかを選択します。ここでは、「Scala」を選びます。Scala Settingsの「Use Scala distribution」は、SCALA\_HOMEが指定されていれば、そのパスが設定されているはずです。指定されていなければ手動で設定します。
 
 \begin{figure}[h]
   \centering
@@ -105,8 +106,8 @@ object HelloWorld {
 }
 \end{lstlisting}
 
-\section{クラスを作ってビルド・実行する}
-それでは、ビルドとプログラムの実行を試しましょう。簡単なプログラム例としてHello, World!を表示するプログラムを作成します。 前述の手順で作成したプロジェクトでsrcフォルダに HelloWorldオブジェクトを作成します。後述するように、オブジェクトは特別なクラスです。srcディレクトリを右クリックして、「New」→「Scala Class」を選択し、開いたウィンド ウでHelloWorldのObjectを作成します(\figRef{fig:create_new_scala_class})。 HelloWorldオブジェクトのコードが\lstRef{src:helloworld}です。ここでは「HelloWorld.scala」と表示されたエディタ領域にこのまま入力してください。 HelloWorldオブジェクトを含むプロジェクト全体をビルドするには、メニューから「Build」→「Make Project」を指定 します。HelloWorldオブジェクトだけをコンパイルするには「Build」→「Compile 'HelloWorld.scala'」をクリックします。 それでは、IntelliJ IDEA上で実行してみましょう。 HelloWorldオブジェクトにカーソルがある状態で、メニューの「Run」→「Run」をクリックして、プログラムを実行します。 Hello, World!という表示がIntelliJ IDEAのコンソールに表示されるはずです(\figRef{fig:intellij})。デバッグをしたい場合には、「Run」 →「Debug」を指定します。 Eclipseユーザーのために、Eclipseのショートカットを併 記したIntelliJ IDEAの代表的なショートカット一覧を\tbRef{tb:intellij_shortcuts}に示します。
+\subsection{クラスを作ってビルド・実行する}
+それでは、ビルドとプログラムの実行を試しましょう。簡単なプログラム例としてHello, World!を表示するプログラムを作成します。前述の手順で作成したプロジェクトでsrcフォルダにHelloWorldオブジェクトを作成します。後述するように、オブジェクトは特別なクラスです。srcディレクトリを右クリックして、「New」→「Scala Class」を選択し、開いたウィンド ウでHelloWorldのObjectを作成します(\figRef{fig:create_new_scala_class})。HelloWorldオブジェクトのコードが\lstRef{src:helloworld}です。ここでは「HelloWorld.scala」と表示されたエディタ領域にこのまま入力してください。HelloWorldオブジェクトを含むプロジェクト全体をビルドするには、メニューから「Build」→「Make Project」を指定します。HelloWorldオブジェクトだけをコンパイルするには「Build」→「Compile 'HelloWorld.scala'」をクリックします。それでは、IntelliJ IDEA上で実行してみましょう。HelloWorldオブジェクトにカーソルがある状態で、メニューの「Run」→「Run」をクリックして、プログラムを実行します。Hello, World!という表示がIntelliJ IDEAのコンソールに表示されるはずです(\figRef{fig:intellij})。デバッグをしたい場合には、「Run」→「Debug」を指定します。Eclipseユーザーのために、Eclipseのショートカットを併記したIntelliJ IDEAの代表的なショートカット一覧を\tbRef{tb:intellij_shortcuts}に示します。
 
 \begin{figure}[h]
   \centering
@@ -127,9 +128,9 @@ object HelloWorld {
     Quick Access & Ctrl+3 & Find Action  & Ctrl+Shift+A \\ \hline
     Content Assist & Ctrl+Space & Complete Code & Ctrl+Space \\ \hline
     Open Declaration & F3 & - & Ctrl+B \\ \hline
-    Quick Hierarchy & Ctrl+T & Type Hierarchy & Ctrl+H \\ \hline  
-    Open Types & Ctrl+Shift+T & Open Class & Ctrl+N \\ \hline  
-    Open Resources & Ctrl+Shift+R & Open Files & Ctrl+Shift+N \\ \hline 
+    Quick Hierarchy & Ctrl+T & Type Hierarchy & Ctrl+H \\ \hline
+    Open Types & Ctrl+Shift+T & Open Class & Ctrl+N \\ \hline
+    Open Resources & Ctrl+Shift+R & Open Files & Ctrl+Shift+N \\ \hline
     \end{tabular}
   }
   \end{center}
@@ -137,11 +138,11 @@ object HelloWorld {
 \end{table}
 
 
-\part{一目でわかる「HelloWorld」}
-ここで、Scalaプログラムの実行方法を整理しておきましょう。Scalaには、以下の三つの実行方法があります。 
+\section{一目でわかる「HelloWorld」}
+ここで、Scalaプログラムの実行方法を整理しておきましょう。Scalaには、以下の三つの実行方法があります。
 
-\section{対話型インタプリタで実行する}
-最初は、Scalaのコードをインタプリタで対話的に実行する方法です。この実行環境のことをREPL\index{REPL}\footnote{Read Eval Print Loopの略称}といいます。コマンドラインからscalaコマンドを実行するとREPLが起動し、「\verb|scala>|」というプロンプトが表示されます。このプロンプトに続けて、Scalaのプログラムを入力してEnterキーを押すと、実行結果が対話的に確認できます。 
+\subsection{対話型インタプリタで実行する}
+最初は、Scalaのコードをインタプリタで対話的に実行する方法です。この実行環境のことをREPL\index{REPL}\footnote{Read Eval Print Loopの略称}といいます。コマンドラインからscalaコマンドを実行するとREPLが起動し、「\verb|scala>|」というプロンプトが表示されます。このプロンプトに続けて、Scalaのプログラムを入力してEnterキーを押すと、実行結果が対話的に確認できます。
 \begin{lstlisting}[language=scala, frame=none]
 scala> println("Hello, World!")
 Hello, World!
@@ -155,7 +156,7 @@ val message = "Hello, World!"; println(message)
 \end{lstlisting}
 \end{itembox}
 
-\section{スクリプトモードで実行する}
+\subsection{スクリプトモードで実行する}
 Scalaのプログラムをスクリプトとして実行する方法です。まず、中身が次の1行だけの「HelloWorldScript.scala」というスクリプトファイルを作成してください。
 \begin{lstlisting}[language=scala, frame=none]
 println("Hello, World!")
@@ -165,9 +166,9 @@ println("Hello, World!")
 $ scala HelloWorldScript.scala
 Hello, World!
 \end{lstlisting}
-実行する際、Windowsが警告を出す場合があります。その場合はアクセスを許可してください。 
+実行する際、Windowsが警告を出す場合があります。その場合はアクセスを許可してください。
 
-\section{コンパイル済みのプログラムを実行する}
+\subsection{コンパイル済みのプログラムを実行する}
 Javaと同様にコンパイラによってコンパイルしたプログラムを実行する方法です。まず、コンパイルの対象となるソースコードを用意します。そして、scalacコマンドでこのソースコードをコンパイルします。
 \begin{lstlisting}[language=bash, frame=none]
 $ scalac HelloWorld.scala

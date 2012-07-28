@@ -2,20 +2,20 @@
 \begin{itembox}[l]{ここで学ぶこと}
 \begin{itemize}
 \item 第一級オブジェクトとしての関数
-\item パターンマッチ(match式) 
+\item パターンマッチ(match式)
 \item ケースクラス
 \item トレイト
 \end{itemize}
 \end{itembox}
 
-応用編ではまず、関数型言語の「関数」とはそもそもどういう概念かを説明します。関数は、一つ以上の引数を取り、一つの結果(戻り値)を生成する役割を持つオブジェクトです。基礎編で登場したメソッド\footnote{defキーワードで宣言するメソッドのことです。} はクラスに従属しますが、関数は単独で利用できます。例えば、
+応用編ではまず、関数型言語の「関数」とはそもそもどういう概念かを説明します。関数は、一つ以上の引数を取り、一つの結果(戻り値)を生成する役割を持つオブジェクトです。基礎編で登場したメソッド\footnote{defキーワードで宣言するメソッドのことです。}はクラスに従属しますが、関数は単独で利用できます。例えば、
 \begin{lstlisting}[language=scala, frame=none]
 (x:Int) => x * x
 \end{lstlisting}
-は、「関数リテラル」と呼ばれる記述方法で、この例はIntの引数を取り、それを二乗した結果(戻り値)を生成する関数を示します。また、この関数リテラルで記述される名前のない関数を「無名関数」といいます。 
+は、「関数リテラル」と呼ばれる記述方法で、この例はIntの引数を取り、それを二乗した結果(戻り値)を生成する関数を示します。また、この関数リテラルで記述される名前のない関数を「無名関数」といいます。
 
 \subsection{関数を変数に代入したり引数で渡せる}
-関数型言語での関数は、他の値と同様、変数に代入したり、別の関数の引数として渡したり、関数の戻り値として返したりと、基本的な操作を制限なく行える一人前のオブジェクトです。この性質を持つオブジェクトを「第一級オブジェクト」といいます。 例えば、\lstRef{src:variable_function}は関数を変数に代入する例です。 squareに代入された関数は、Int型の引数と、Int型の戻り値を持つ型として、定義されたことがわかります。定義した関数は、\lstRef{src:function_call}のようにして呼び出せます。定義した引数や戻り値に間違った型を指定するとコンパイルエラーとなります。「型安全」(タイプセーフ)なので、プログラマの負担が軽減されます。関数はまた、\lstRef{src:higher_order_function}のように通常の値と同様、関数の引数や戻り値に利用できます。このように関数を利用する関数のことを「高階関数」と呼びます。高階関数を利用することで、命令型言語では表現できないシンプルなコードが記述可能です。
+関数型言語での関数は、他の値と同様、変数に代入したり、別の関数の引数として渡したり、関数の戻り値として返したりと、基本的な操作を制限なく行える一人前のオブジェクトです。この性質を持つオブジェクトを「第一級オブジェクト」といいます。例えば、\lstRef{src:variable_function}は関数を変数に代入する例です。squareに代入された関数は、Int型の引数と、Int型の戻り値を持つ型として、定義されたことがわかります。定義した関数は、\lstRef{src:function_call}のようにして呼び出せます。定義した引数や戻り値に間違った型を指定するとコンパイルエラーとなります。「型安全」(タイプセーフ)なので、プログラマの負担が軽減されます。関数はまた、\lstRef{src:higher_order_function}のように通常の値と同様、関数の引数や戻り値に利用できます。このように関数を利用する関数のことを「高階関数」と呼びます。高階関数を利用することで、命令型言語では表現できないシンプルなコードが記述可能です。
 
 \begin{lstlisting}[language=scala, label=src:variable_function, caption=関数を変数に代入する例]
 // val 変数名 = 引数のリスト => コードブロック
@@ -23,14 +23,14 @@ val square = (x:Int) => x * x
 // コードブロックが複数行の場合({ }が必要)
 val squareDebug = (x:Int) => {
   val result = x * x println(result) result
-} 
+}
 \end{lstlisting}
 
 \begin{lstlisting}[language=scala, label=src:function_call, caption=値としての関数を呼び出す]
-val result1 = square(2)		// result1 = 4
+val result1 = square(2)    // result1 = 4
 val result2 = squareDebug(2)    // result2 = 4 標準出力に4を表示
-val result3 = square("aaa")	// 第一引数の型がコンパイルエラー
-val result4:String = square(2)	// 戻り値の型がコンパイルエラー 
+val result3 = square("aaa")  // 第一引数の型がコンパイルエラー
+val result4:String = square(2)  // 戻り値の型がコンパイルエラー
 \end{lstlisting}
 
 \begin{lstlisting}[language=scala, label=src:higher_order_function, caption=関数をメソッドの引数や戻り値に利用する]
@@ -40,7 +40,7 @@ def debugPrint(x:Int, func:(Int) => Int) {
   println(result)
 }
 debugPrint(10, square) // 100が表示される
- 
+
 // デバッグ版のsquareメソッドを返す関数
 def newSquareDebugFunc = {
   val squareDebugFunc = (x:Int) => {
@@ -50,7 +50,7 @@ def newSquareDebugFunc = {
   squareDebugFunc
 }
 val squareDebug = newSquareDebugFunc
-val result = squareDebug(5) // 25が表示される 
+val result = squareDebug(5) // 25が表示される
 \end{lstlisting}
 
 \section{ScalaとJavaのコレクションの違い}
@@ -67,7 +67,7 @@ val newNumbers1 = 0 +: numbers // 先頭に0に追加。 List(0, 1, 2, 3)
 val newNumbers2 = 0 :: numbers // 先頭に0に追加。 List(0, 1, 2, 3)
 val newNumbers3 = numbers ++ List(4, 5)
 // ↑ 末尾にList(4, 5)を追加。 List(1, 2, 3, 4, 5)
-val newNumbers4 = numbers :+ 4 // 末尾に4を追加。 List(1, 2, 3, 4) 
+val newNumbers4 = numbers :+ 4 // 末尾に4を追加。 List(1, 2, 3, 4)
 \end{lstlisting}
 
 \begin{lstlisting}[language=scala, label=src:for_statement, caption=Listの各要素を表示する二通りの方法(Javaのfor文に相当する書き方)]
@@ -83,7 +83,7 @@ val numbers = List(1, 2, 3, 4, 5)
 // Javaの"for(element : numbers){"に相当
 for(number <- numbers) {
   println(number)
-} 
+}
 \end{lstlisting}
 
 \subsection{高階関数を使って繰り返し処理を作る}
@@ -129,24 +129,24 @@ Javaの配列と同様、Arrayは要素を更新できます。要素の取得�
 \begin{lstlisting}[language=scala, frame=none]
 fruits(1) = "cherry"
 // ↑fruits.update(1,"cherry")の糖衣構文 最後に、要素を繰り返し処理する場合を以下に示します。
- 
-// for版 
+
+// for版
 for(fruit <- fruits){
   println(fruit)
 }
- 
+
 // foreach版
 fruits.foreach(println)
 \end{lstlisting}
 
-\section{Scala プログラミングに欠かせない機能}
-ここからは、Scalaプログラミングに欠かせない「パターンマッチ」と、独自機能である「ケースクラス」、そして「トレイト」について説明します。 
+\section{Scalaプログラミングに欠かせない機能}
+ここからは、Scalaプログラミングに欠かせない「パターンマッチ」と、独自機能である「ケースクラス」、そして「トレイト」について説明します。
 
 \subsection{match式による柔軟なパターンマッチ}
-Scalaのパターンマッチは、Javaのswitch文をより強化し た場合分けの機能を提供します。パターンマッチは多くの言 語で採用されていますが、Scalaのものは様々な条件にマッチさせることができ、Scalaプログラミングの中心的な役割を担います。パターンマッチの処理を記述するにはmatch式を利用します。
+Scalaのパターンマッチは、Javaのswitch文をより強化した場合分けの機能を提供します。パターンマッチは多くの言語で採用されていますが、Scalaのものは様々な条件にマッチさせることができ、Scalaプログラミングの中心的な役割を担います。パターンマッチの処理を記述するにはmatch式を利用します。
 
 \subsection{数値や文字列などでマッチング可能}
-数値でのマッチの例が\lstRef{src:digit_matching}です。変数n(セレクターと呼びます)に対して、match式を適用し、caseによる選択肢は上から下へと順番に検証されます。Javaのswitch文では breakを記述しなければ後続の選択肢の処理を実行しますが、match式ではbreakはありません。マッチしたcaseを処理したら、他のcaseを処理せずにmatch式の制御を抜けます。 例えば、この例では、case 1で変数nが1に該当すれば\verb|=>|の次の処理のprintln("one") が実行されます。また、case \_はワイルドカードといって、switch文のdefault:に相当します。また、Scalaのmatch式では、文字列やコレクション、型によるマッチングが可能です。\lstRef{src:match_expression}の例ではInt型や文字列の値、List型の条件を指定して文字列を返しています。\lstRef{src:match_expression}で見たように、match式では戻り値を返すことができます。\verb|=>|の後で最後に評価された式の値を戻り値として返せます。
+数値でのマッチの例が\lstRef{src:digit_matching}です。変数n(セレクターと呼びます)に対して、match式を適用し、caseによる選択肢は上から下へと順番に検証されます。Javaのswitch文ではbreakを記述しなければ後続の選択肢の処理を実行しますが、match式ではbreakはありません。マッチしたcaseを処理したら、他のcaseを処理せずにmatch式の制御を抜けます。例えば、この例では、case 1で変数nが1に該当すれば\verb|=>|の次の処理のprintln("one")が実行されます。また、case \_はワイルドカードといって、switch文のdefault:に相当します。また、Scalaのmatch式では、文字列やコレクション、型によるマッチングが可能です。\lstRef{src:match_expression}の例ではInt型や文字列の値、List型の条件を指定して文字列を返しています。\lstRef{src:match_expression}で見たように、match式では戻り値を返すことができます。\verb|=>|の後で最後に評価された式の値を戻り値として返せます。
 
 \begin{lstlisting}[language=scala, label=src:digit_matching, caption=数値のマッチングの例]
 def numberMatch(n:Int) = n match {
@@ -157,7 +157,7 @@ def numberMatch(n:Int) = n match {
 numberMatch(1) // one
 numberMatch(2) // two or three
 numberMatch(3) // two or three
-numberMatch(4) // other 
+numberMatch(4) // other
 \end{lstlisting}
 
 \begin{lstlisting}[language=scala, label=src:match_expression, caption=match式は値を返す]
@@ -170,7 +170,7 @@ def convertNumberToString(obj:Any) = obj match {
 println(convertNumberToString(1)) // one
 println(convertNumberToString("2")) // two
 println(convertNumberToString(List(3,3,3)) // three
-println(convertNumberToString(0.5)) // 例外発生 
+println(convertNumberToString(0.5)) // 例外発生
 \end{lstlisting}
 
 \begin{lstlisting}[language=scala, label=src:case_class, caption=ケースクラスで定義したバリューオブジェクトの利用]
@@ -184,7 +184,7 @@ println("firstName = %s, lastName = %s".format(f, l))
 // ↑ firstName = Junichi, lastName = Kato
 
 val PersonName(_, l2) = personName // lastNameだけを抽出
-println("lastName = %s".format(l2)) // lastName = Kato 
+println("lastName = %s".format(l2)) // lastName = Kato
 \end{lstlisting}
 
 \subsection{ケースクラスでバリューオブジェクトを簡単実装}
@@ -199,11 +199,11 @@ case class PersonName(firstName: String, lastName: String)
 \item ケースクラスのコンストラクタの引数宣言をvalで行う
 \item toString、hashCode、equalsメソッドの実装を行う
 \end{itemize}
- 
-このため、たった1行の記述で、\lstRef{src:case_class}のようにバリューオブジェクトを扱うことが可能です。 
+
+このため、たった1行の記述で、\lstRef{src:case_class}のようにバリューオブジェクトを扱うことが可能です。
 
 \subsection{トレイトは実装コードを書けるインタフェース}
-ScalaにはJavaのインタフェースと同じ機能はありません。Scalaではインタフェースの代わりにトレイト(trait)を使います。このトレイトを一言でいうと、実装コードを書けるインタフェースのようなものです。 \lstRef{src:trait}は英語と日本でのあいさつを使い分けるアプリをトレイトで実装したサンプルです。GreetingトレイトはJavaのインタフェースのように実装を持ちません。抽象クラスであるAbstractGreetingクラスが継承しています\footnote{二つ以上のトレイトを継承する場合は「... extends Greeting with A with B」 などとwithでつなげて指名します。} 。次はトレイトを使った「ミックスイン」の例です。複数のトレイトを合成することをミックスインと呼びます。\lstRef{src:trait_mixin}を見てください。今度はトレイトに処理が実装されています。トレイトにはコンストラクタが記述できない以外は、クラスと同様に実装コードも記述できます。ここでは、従業員(Employee)をメモリー上で読み書きできるリポジトリを例に挙げます。リポジトリの抽象クラスである EmployeeRepositoryBaseは内部にMapを持ち、ListやMapへの変換メソッドを提供します。そして、リポジトリとして書き込みや読み込みの機能を提供するWritableEmployeeRepositoryトレイトとReadableEmployeeRepositoryトレイトがあります。先ほどの例と違い実装コードを含みます。また、これらのトレイトではthis型でEmployeeRepositoryBaseクラスを指定しており、ミックスイン対象のEmployeeRepositoryBaseの機能にアクセスできます。EmployeeReadOnlyRepositoryクラスは読み込み専用で、EmployeeRepositoryクラスは読み書きができ、toReadableメソッドでEmployeeReadOnlyRepositoryクラスに変換することがで きます。トレイトでミックスインを使うとクラスに実装する処理を小さな断片として定義し、必要なときに組み合わせてクラスを実装することが可能です。JavaにはないScalaの魅力の一つです。 
+ScalaにはJavaのインタフェースと同じ機能はありません。Scalaではインタフェースの代わりにトレイト(trait)を使います。このトレイトを一言でいうと、実装コードを書けるインタフェースのようなものです。\lstRef{src:trait}は英語と日本でのあいさつを使い分けるアプリをトレイトで実装したサンプルです。GreetingトレイトはJavaのインタフェースのように実装を持ちません。抽象クラスであるAbstractGreetingクラスが継承しています\footnote{二つ以上のトレイトを継承する場合は「... extends Greeting with A with B」 などとwithでつなげて指名します。}。次はトレイトを使った「ミックスイン」の例です。複数のトレイトを合成することをミックスインと呼びます。\lstRef{src:trait_mixin}を見てください。今度はトレイトに処理が実装されています。トレイトにはコンストラクタが記述できない以外は、クラスと同様に実装コードも記述できます。ここでは、従業員(Employee)をメモリー上で読み書きできるリポジトリを例に挙げます。リポジトリの抽象クラスであるEmployeeRepositoryBaseは内部にMapを持ち、ListやMapへの変換メソッドを提供します。そして、リポジトリとして書き込みや読み込みの機能を提供するWritableEmployeeRepositoryトレイトとReadableEmployeeRepositoryトレイトがあります。先ほどの例と違い実装コードを含みます。また、これらのトレイトではthis型でEmployeeRepositoryBaseクラスを指定しており、ミックスイン対象のEmployeeRepositoryBaseの機能にアクセスできます。EmployeeReadOnlyRepositoryクラスは読み込み専用で、EmployeeRepositoryクラスは読み書きができ、toReadableメソッドでEmployeeReadOnlyRepositoryクラスに変換することができます。トレイトでミックスインを使うとクラスに実装する処理を小さな断片として定義し、必要なときに組み合わせてクラスを実装することが可能です。JavaにはないScalaの魅力の一つです。
 
 \begin{lstlisting}[language=scala, label=src:trait, caption=トレイトの利用例。ScalaにはJavaのinterfaceに相当する機能はなく、トレイトを使用する]
 // あいさつのトレイト
@@ -260,7 +260,7 @@ trait ReadableEmployeeRepository {
   this: EmployeeRepositoryBase => // this型の指定
   def load(key: Int): Employee = entities(key)
 }
-  
+
 // 書き込み専用のリポジトリ機能
 trait WritableEmployeeRepository {
   this: EmployeeRepositoryBase => // this型の指定
@@ -282,7 +282,7 @@ class EmployeeRepository
     result.entities ++= entities
     result
   }
-   
+
 }
 // アプリケーション本体
 object RepositoryApplication {
@@ -291,12 +291,12 @@ object RepositoryApplication {
     repos.save(Employee(1, "KATO"))
     val emp = repos.load(1)
     println(emp) // Employee(1, KATO)
-     
+
     val readOnlyRepos = repos.toReadable
     val emp2 = readOnlyRepos.load(1)
     println(emp2) // Employee(1, KATO))
   }
-} 
-\end{lstlisting} 
+}
+\end{lstlisting}
 
-Scalaには次世代言語として様々な機能が実装されています。言語としての機能が多いとどうしても敬遠しがちですが、まずは自分が理解した範囲からScalaを使い始めてもよいと思います。関数型が難しければ、従来 からなじみのある命令型でプログラミングしてもScalaの魅力を十分に体感することがで きます。ここではScalaの魅力のほんの一部しか紹介できませんが、これをきっかけにして、Scala関連書籍やネット上のコンテンツを合わせて自分なりに学習することをお勧めします。
+Scalaには次世代言語として様々な機能が実装されています。言語としての機能が多いとどうしても敬遠しがちですが、まずは自分が理解した範囲からScalaを使い始めてもよいと思います。関数型が難しければ、従来からなじみのある命令型でプログラミングしてもScalaの魅力を十分に体感することがで きます。ここではScalaの魅力のほんの一部しか紹介できませんが、これをきっかけにして、Scala関連書籍やネット上のコンテンツを合わせて自分なりに学習することをお勧めします。
