@@ -37,14 +37,14 @@ URL形式でデータを渡すときにはURLのクエリ部分を辞書のよ�
 for (NSString* parameterString in [queryString componentsSeparatedByString:@"&"]) {
   NSArray* parameterArray = [parameterString componentsSeparatedByString:@"="];
   if ([parameterArray count] != 2) {
-	NSLog(@"Invalid parameter: \%@", parameterString);
+	NSLog(@"Invalid parameter: %@", parameterString);
 	continue;
   }
   NSString* parameterKey = [(NSString*)[parameterArray objectAtIndex:0]
 	stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
   NSString* parameterValue = [(NSString*)[parameterArray objectAtIndex:1]
 	stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-  NSLog(@"key=\%@, value=\%@", parameterKey, parameterValue);
+  NSLog(@"key=%@, value=%@", parameterKey, parameterValue);
 }
 \end{lstlisting}
 例えば\htmladdnormallinkfoot{Facebook iOS SDK}{https://developers.facebook.com/docs/mobile/ios/build/}ではこの仕組みを利用して、自作アプリからFacebookアプリを呼び出してユーザ認証などを行うことができます。
@@ -116,7 +116,7 @@ int pid = fork();
 		NSLog(@"fork failed");
 	} else if (pid == 0) {
 		for (int i=0; i<1000; i++) {
-			NSLog(@"\%d", i);
+			NSLog(@"%d", i);
 			sleep(1);
 		}
 	} else {
