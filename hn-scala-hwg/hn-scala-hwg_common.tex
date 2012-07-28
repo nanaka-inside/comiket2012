@@ -1,5 +1,3 @@
-\pagestyle{plain}
-
 %% 高さの設定
 \setlength{\textheight}{\paperheight}   % ひとまず紙面を本文領域に
 \setlength{\topmargin}{-5.4truemm}      % 上の余白を20mm(=1inch-5.4mm)に
@@ -19,6 +17,14 @@
 \usepackage{listings,jlisting}
 \usepackage{color}
 \usepackage[dvipdfm]{hyperref,graphicx}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+
+%% フッターの設定
+\lfoot[ななか +inside press ◆ \thepage]{}
+\cfoot[]{}
+\rfoot[]{ななか +inside press ◆ \thepage}
 
 \renewcommand{\lstlistingname}{リスト}
 \lstset{language=[objective]c,
