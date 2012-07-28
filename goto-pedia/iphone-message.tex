@@ -33,7 +33,7 @@ iPhone Simulatorや実機上でURLスキーマによるアプリの起動を試�
 \begin{figure}
   \centering
   \fbox{
-    \includegraphics[width=9cm,clip]{goto-pedia/img/url-launch.eps}
+    \includegraphics[width=6cm,clip]{goto-pedia/img/url-launch.eps}
   }
   \caption{カスタムURLで自アプリを起動する}
 \end{figure}
@@ -97,12 +97,6 @@ Mac OS Xの場合、NSDistributedNotificationCenterを使って他のアプリ�
 ただしCPDistributedMessagingCenterはプライベートAPIなので、App Storeに出すときにはほぼ間違いなくリジェクト食らうと思います。
 とはいえ便利なので個人のiPhoneで楽しむか、jailbreak環境で楽しむくらいがいいですね。
 
-\subsection{共有メモリ形式}
-iOSにはサンドボックス機構があり、他プロセスのメモリに直接アクセスすることは出来ません。
-そこで（POSIXの）共有メモリを使ってプロセス間で読み書きを行うということを考えました。
-
-方法としては、POSIXのshm\_open関数でファイルディスクリプタのように開き、mmapすることでメモリとして扱うことができます。
-
 \subsection{ファイル}
 \htmladdnormallinkfoot{iOS アプリケーションプログラミングガイド}{https://developer.apple.com/jp/devcenter/ios/library/documentation/iPhoneAppProgrammingGuide.pdf}によると
 アプリケーション（および環境設定を含むデータ）はサンドボックスでデータが保護されており、
@@ -112,6 +106,13 @@ iOSにはサンドボックス機構があり、他プロセスのメモリに�
 iOS Simulatorでは
 ``~/Library/Application Support/iPhone Simulator/5.1/Applications/(UUID)/''に書きだされ、他のアプリからパスを指定すれば開くことができましたが（サンドボックスの保護がされていない）、実機では
 ``The operation couldn't be completed. Operation not permitted''というエラー(NSErrorのdescription)が発生して開けませんでした。
+
+\subsection{共有メモリ形式}
+iOSにはサンドボックス機構があり、他プロセスのメモリに直接アクセスすることは出来ません。
+そこで（POSIXの）共有メモリを使ってプロセス間で読み書きを行うということを考えました。
+
+方法としては、POSIXのshm\_open関数でファイルディスクリプタのように開き、mmapすることでメモリとして扱うことができます。
+実機でも動くことを確認したので、ファイルの代わりに使うことができて便利です。
 
 \subsection{NSUserDefaults \& KeyChain Access}
 NSUserDefaultsの説明に「他のアプリの設定へのaddSuiteNamed:を使ったアクセスは取得できないよ」とあります。
