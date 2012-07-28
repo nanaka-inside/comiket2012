@@ -30,9 +30,18 @@ iPhone Simulatorや実機上でURLスキーマによるアプリの起動を試�
 特にUIWebViewを多用しているウェブアプリからネイティブのコードを呼び出すときにはこのカスタムURLスキームの仕組みを使用することが多いと思いますが、
 その場合も自分のアプリのバンドルIDから起動されているかのチェックを行うようにしましょう。
 
+\begin{figure}
+  \centering
+  \fbox{
+    \includegraphics[width=9cm,clip]{goto-pedia/img/url-launch.eps}
+  }
+  \caption{カスタムURLで自アプリを起動する}
+\end{figure}
+
+
 \subsubsection{受け取ったクエリをパースする方法}
 URL形式でデータを渡すときにはURLのクエリ部分を辞書のように使うことが一般的である気がします（実経験より）。
-以下どこにでもあるようなURLパースの処理（こういうのをNSStringのカテゴリとして拡張してマイ・プロジェクトにおいておくといいと思う）。
+以下どこにでもあるようなURLパースの処理（こういうのをNSStringのカテゴリとして拡張して自分のプロジェクトにおいておくといいと思う）。
 \begin{lstlisting}{language=[objective]c;caption=起動URLクエリをパースする方法}
 for (NSString* parameterString in [queryString componentsSeparatedByString:@"&"]) {
   NSArray* parameterArray = [parameterString componentsSeparatedByString:@"="];
@@ -48,6 +57,9 @@ for (NSString* parameterString in [queryString componentsSeparatedByString:@"&"]
 }
 \end{lstlisting}
 例えば\htmladdnormallinkfoot{Facebook iOS SDK}{https://developers.facebook.com/docs/mobile/ios/build/}ではこの仕組みを利用して、自作アプリからFacebookアプリを呼び出してユーザ認証などを行うことができます。
+
+またDefault-myscheme.png（myschemeはURLスキーマ）を起動時のスプラッシュ画面と同じ大きさで作成しておくと、
+通常起動時とURLからの起動時で別の画像を使うことができます。
 
 \subsection{ソケット通信}
 先のNSURL形式では情報を通知するために別アプリを一度フォアグラウンドにする必要があります。
