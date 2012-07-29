@@ -129,12 +129,10 @@ Javaの配列と同様、Arrayは要素を更新できます。要素の取得�
 \begin{lstlisting}[language=scala, frame=none]
 fruits(1) = "cherry"
 // ↑fruits.update(1,"cherry")の糖衣構文 最後に、要素を繰り返し処理する場合を以下に示します。
-
 // for版
 for(fruit <- fruits){
   println(fruit)
 }
-
 // foreach版
 fruits.foreach(println)
 \end{lstlisting}
@@ -177,12 +175,10 @@ println(convertNumberToString(0.5)) // 例外発生
 val p1 = PersonName("Junichi", "Kato")
 val p2 = PersonName("JUNICHI", "KATO")
 println(p1 == p2) // p1.equals(p2)が呼ばれる
-
 val personName = PersonName("Junichi", "Kato")
 val PersonName(f, l) = personName // フィールドを抽出
 println("firstName = %s, lastName = %s".format(f, l))
 // ↑ firstName = Junichi, lastName = Kato
-
 val PersonName(_, l2) = personName // lastNameだけを抽出
 println("lastName = %s".format(l2)) // lastName = Kato
 \end{lstlisting}
